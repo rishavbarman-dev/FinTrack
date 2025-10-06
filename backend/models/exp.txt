@@ -1,0 +1,7 @@
+models/: This directory defines the data schemas for your database. If you're using a tool like Mongoose for MongoDB, these files would contain your schema definitions.
+
+User.js: Defines the structure of a user document in your database.
+
+Account.js: Defines the structure of a financial account.
+
+Transaction.js: Defines the structure of a transaction document.

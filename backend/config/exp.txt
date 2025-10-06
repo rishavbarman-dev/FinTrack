@@ -1,0 +1,5 @@
+config/: This is for all your configuration settings.
+
+db.js: Contains the logic to connect to your database. This keeps the connection details out of your main server file.
+
+env/.env: A file to store sensitive environment variables (like API keys, database URLs, etc.). It should be listed in your .gitignore file to prevent it from being committed to version control.

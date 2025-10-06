@@ -1,0 +1,1 @@
+utils/: A catch-all for helper functions that don't fit into other categories, such as data validation functions, utility classes, or functions for formatting data.

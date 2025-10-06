@@ -1,0 +1,7 @@
+routes/: This directory defines the API endpoints for your application. Each file here should be a router for a specific resource, making it easy to manage your API.
+
+auth.js: Handles user authentication routes (e.g., /api/auth/register, /api/auth/login).
+
+accounts.js: Defines routes related to financial accounts (e.g., /api/accounts, /api/accounts/:id).
+
+transactions.js: Contains routes for all transaction-related operations (e.g., /api/transactions, /api/transactions/:id).

@@ -1,0 +1,5 @@
+middleware/: This is for reusable middleware functions that process requests before they hit your route handlers.
+
+auth.js: A middleware function to verify if a user is authenticated (e.g., by checking a JWT token) before allowing access to a protected route.
+
+errorHandler.js: A centralized place to handle errors from all parts of your application, ensuring consistent error responses.

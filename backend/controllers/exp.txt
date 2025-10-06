@@ -1,0 +1,7 @@
+controllers/: This is where you put your business logic. Controllers receive requests from the routes and then interact with the models or other services to process the request and send a response. This separation keeps the routes file clean and focused on URL paths.
+
+authController.js: Contains functions like registerUser, loginUser, etc.
+
+accountController.js: Contains logic for creating, fetching, and updating accounts.
+
+transactionController.js: Contains logic for creating, fetching, and updating transactions.
