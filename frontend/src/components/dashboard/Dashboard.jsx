@@ -12,6 +12,7 @@ import {
   User,
 } from "lucide-react";
 import logo from "../../assets/images/logo.png";
+import Transactions from "../main-content/Transactions";
 
 const menuItems = [
   { id: "dashboard", label: "Dashboard", icon: Home },
@@ -30,7 +31,7 @@ const Dashboard = () => {
       case "dashboard":
         return <DashboardMain darkMode={darkMode} />;
       case "transactions":
-        return <div className="p-8">Transactions Content</div>;
+        return <Transactions darkMode={darkMode} />;
       case "budgets":
         return <div className="p-8">Budgets Content</div>;
       case "reports":

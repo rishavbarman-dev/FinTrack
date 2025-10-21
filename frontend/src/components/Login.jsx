@@ -6,14 +6,17 @@ import eyeIcon from "../assets/images/password_show.png";
 import eyeOffIcon from "../assets/images/password_hide.png";
 import loginIcon from "../assets/images/login_icon_white.png";
 import waveBackground from "../assets/images/background_left_login.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import demoUser from "../data/Users";
 
 const Login = () => {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     // e.preventDefault();
@@ -52,6 +55,26 @@ const Login = () => {
     // } finally {
     //     stopLoading();
     // }
+
+    // Temporary success message for demonstration
+    e.preventDefault();
+
+    const user = demoUser.find(
+      (u) =>
+        (u.username === username || u.email === email) &&
+        u.password === password
+    );
+    console.log(user);
+    if (user) {
+      setSuccessMessage("Login successful!");
+      setErrorMessage("");
+      setTimeout(() => {
+        navigate("/dashboard"); // Redirect to dashboard
+      }, 1000);
+    } else {
+      setErrorMessage("Invalid username or password.");
+      setSuccessMessage("");
+    }
   };
 
   return (

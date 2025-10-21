@@ -4,10 +4,10 @@ import { Download } from "lucide-react";
 
 export default function DashboardMain({ darkMode }) {
   const categories = [
-    { name: "Food", color: "bg-red-400", value: 0 },
-    { name: "Transportation", color: "bg-blue-400", value: 0 },
-    { name: "Housing", color: "bg-yellow-400", value: 0 },
-    { name: "Entertainment", color: "bg-gray-400", value: 0 },
+    { name: "Food", color: "bg-red-400", value: 1000 },
+    { name: "Transportation", color: "bg-blue-400", value: 200 },
+    { name: "Housing", color: "bg-yellow-400", value: 3000 },
+    { name: "Entertainment", color: "bg-gray-400", value: 300 },
     { name: "Shopping", color: "bg-purple-500", value: 0 },
     { name: "Test", color: "bg-sky-400", value: 0 },
   ];
@@ -34,7 +34,7 @@ export default function DashboardMain({ darkMode }) {
                 darkMode ? "text-white" : "text-gray-900"
               }`}
             >
-              $0.00
+              ₹2000.00
             </div>
             <p className="text-sm text-green-500 mt-1 flex items-center">
               <span>↑ 0% from last month</span>
@@ -55,7 +55,7 @@ export default function DashboardMain({ darkMode }) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-cyan-500">$0.00</div>
+            <div className="text-3xl font-bold text-cyan-500">₹7000.00</div>
             <p
               className={`text-sm ${
                 darkMode ? "text-gray-500" : "text-gray-500"
@@ -79,7 +79,7 @@ export default function DashboardMain({ darkMode }) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-red-500">$0.00</div>
+            <div className="text-3xl font-bold text-red-500">₹5000.00</div>
             <p
               className={`text-sm ${
                 darkMode ? "text-gray-500" : "text-gray-500"
@@ -159,7 +159,7 @@ export default function DashboardMain({ darkMode }) {
                       darkMode ? "text-gray-400" : "text-gray-600"
                     } w-12 text-right`}
                   >
-                    ${category.value}
+                    ₹{category.value}
                   </span>
                 </div>
               ))}
