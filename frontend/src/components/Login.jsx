@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import loginCardImage from "../assets/images/white_login_background.png";
 import usernameIcon from "../assets/images/username.png";
 import passwordIcon from "../assets/images/password.png";
@@ -8,6 +8,9 @@ import loginIcon from "../assets/images/login_icon_white.png";
 import waveBackground from "../assets/images/background_left_login.png";
 import { Link, useNavigate } from "react-router-dom";
 import demoUser from "../data/Users";
+import axiosInstance from "@/utils/axiosInstance";
+import { API_PATHS } from "@/utils/apiPaths";
+import { UserContext } from "@/context/UserContext";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -16,64 +19,56 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const { updateUser } = useContext(UserContext);
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    // e.preventDefault();
-    // const loginData = { username, password };
-    // try {
-    //     const response = await fetch('/api/v1/auth/login', {
-    //         method: 'POST',
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: JSON.stringify(loginData),
-    //     });
-    //     if (response.ok) {
-    //         const data = await response.json();
-    //         const successMessage = data.message || 'Login successful!';
-    //         setSuccessMessage(successMessage);
-    //         setErrorMessage('');
-    //         // Save user data in AuthContext
-    //         login(data.data);
-    //         // Redirect based on role
-    //         const userRole = data.data.userDetails.role;
-    //         if (userRole === 'OWNER_ADMIN') {
-    //             navigate('/dashboard');
-    //         } else if (userRole === 'TECHNICIAN') {
-    //             navigate('/technician');
-    //         } else {
-    //             navigate('/dashboard');
-    //         }
-    //     } else {
-    //         const errorData = await response.json();
-    //         setErrorMessage(errorData.message || 'Login failed. Please check your credentials.');
-    //         setSuccessMessage('');
-    //     }
-    // } catch (error) {
-    //     console.error('Login request failed:', error);
-    //     setErrorMessage('Something went wrong. Please try again later.');
-    //     setSuccessMessage('');
-    // } finally {
-    //     stopLoading();
-    // }
-
-    // Temporary success message for demonstration
     e.preventDefault();
 
-    const user = demoUser.find(
-      (u) =>
-        (u.username === username || u.email === email) &&
-        u.password === password
-    );
-    console.log(user);
-    if (user) {
-      setSuccessMessage("Login successful!");
-      setErrorMessage("");
-      setTimeout(() => {
-        navigate("/dashboard"); // Redirect to dashboard
-      }, 1000);
-    } else {
-      setErrorMessage("Invalid username or password.");
-      setSuccessMessage("");
+    // Temporary success message for demonstration
+    // const user = demoUser.find(
+    //   (u) =>
+    //     (u.username === username || u.email === email) &&
+    //     u.password === password
+    // );
+    // console.log(user);
+    // if (user) {
+    //   setSuccessMessage("Login successful!");
+    //   setErrorMessage("");
+    //   setTimeout(() => {
+    //     navigate("/dashboard"); // Redirect to dashboard
+    //   }, 1000);
+    // } else {
+    //   setErrorMessage("Invalid username or password.");
+    //   setSuccessMessage("");
+    // }
+
+    // API call
+    try {
+      const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+        email,
+        password,
+      });
+      // console.log("Login response:", response);
+
+      const { token, user } = response.data;
+      if (token) {
+        localStorage.setItem("token", token);
+        updateUser(user); // Update user context
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage("An error occurred during login. Please try again.");
+      }
     }
   };
 
@@ -94,26 +89,26 @@ const Login = () => {
             Login
           </h1>
 
-          {/* Username */}
+          {/* Email */}
           <div className="mb-5 relative">
             <label
-              htmlFor="username"
+              htmlFor="email"
               className="block mb-2 text-gray-800 font-medium capitalize"
             >
-              Username
+              Email
             </label>
             <img
               src={usernameIcon}
-              alt="Username"
+              alt="Email"
               className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 mt-4"
             />
             <input
               type="text"
-              id="username"
+              id="email"
               placeholder="Username or Email"
               className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-md text-base focus:outline-none"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import loginCardImage from "../assets/images/white_login_background.png";
 import usernameIcon from "../assets/images/username.png";
 import passwordIcon from "../assets/images/password.png";
@@ -7,7 +7,10 @@ import eyeOffIcon from "../assets/images/password_hide.png";
 import loginIcon from "../assets/images/login_icon_white.png";
 import waveBackground from "../assets/images/background_left_login.png";
 import { Mail } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "@/context/UserContext";
+import axiosInstance from "@/utils/axiosInstance";
+import { API_PATHS } from "@/utils/apiPaths";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -18,8 +21,40 @@ const Signup = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const { updateUser } = useContext(UserContext);
+
+  const navigate = useNavigate();
+
   const handleLogin = async (e) => {
-    // e.preventDefault();
+    e.preventDefault();
+
+    // signup api call
+    try {
+      const response = await axiosInstance.post(API_PATHS.AUTH.SIGNUP, {
+        firstName,
+        lastName,
+        email,
+        password,
+      });
+
+      const { token, user } = response.data;
+
+      if (token) {
+        localStorage.setItem("token", token);
+        updateUser(user); // Update user context
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage("An error occurred during Signup. Please try again.");
+      }
+    }
   };
 
   return (
