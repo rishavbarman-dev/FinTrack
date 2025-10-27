@@ -1,0 +1,29 @@
+{
+  "name": "fintrack",
+  "version": "1.0.0",
+  "description": "A modern, fast, and responsive web-based personal finance tracker built with **React**, **Vite**, and **Tailwind CSS**.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node backend/server",
+    "server": "nodemon backend/server",
+    "client": "npm run dev --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rishavbarman-dev/FinTrack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rishavbarman-dev/FinTrack/issues"
+  },
+  "homepage": "https://github.com/rishavbarman-dev/FinTrack#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "dependencies": {
+    "nodemon": "^3.1.10"
+  }
+}

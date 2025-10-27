@@ -10,5 +10,6 @@
 *.log.*
 *.sig
 
+node_modules
 # pkg/
 # src/

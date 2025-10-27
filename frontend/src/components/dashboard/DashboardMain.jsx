@@ -1,9 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Download } from "lucide-react";
+import {
+  CreditCard,
+  DollarSign,
+  Download,
+  Percent,
+  TrendingUp,
+} from "lucide-react";
+import { useUserAuth } from "@/hooks/useUserAuth";
+import { useNavigate } from "react-router-dom";
+import { API_PATHS } from "@/utils/apiPaths";
+import axiosInstance from "@/utils/axiosInstance";
+import InfoCard from "../card/InfoCard";
+import RecentTransactions from "./RecentTransaction";
+import FinancialOverview from "./FinancialOverview";
 
 export default function DashboardMain({ darkMode }) {
-  const categories = [
+  // fallback demo categories (used if API doesn't return categories)
+  const fallbackCategories = [
     { name: "Food", color: "bg-red-400", value: 1000 },
     { name: "Transportation", color: "bg-blue-400", value: 200 },
     { name: "Housing", color: "bg-yellow-400", value: 3000 },
@@ -12,119 +26,120 @@ export default function DashboardMain({ darkMode }) {
     { name: "Test", color: "bg-sky-400", value: 0 },
   ];
 
+  useUserAuth();
+
+  const navigate = useNavigate();
+
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const fetchDashboardData = async () => {
+    if (loading) return;
+
+    setLoading(true);
+
+    try {
+      const response = await axiosInstance.get(
+        `${API_PATHS.DASHBOARD.GET_DATA}`
+      );
+      console.log("Dashboard data:", response.data);
+
+      if (response.data) {
+        setDashboardData(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardData();
+    return () => {};
+  }, []);
+
+  const totalIncome = dashboardData?.totalIncome ?? 0;
+  const totalExpense = dashboardData?.totalExpense ?? 0;
+  const totalBalance =
+    dashboardData?.totalBalance ?? totalIncome - totalExpense;
+  const savingsRate =
+    totalIncome && totalIncome !== 0
+      ? Math.round(((totalIncome - totalExpense) / totalIncome) * 100)
+      : 0;
+
+  // categories from API if provided else fallback
+  const categories = dashboardData?.categories ?? fallbackCategories;
+  const maxCategoryValue = Math.max(
+    1,
+    ...categories.map((c) => Math.abs(Number(c.value ?? 0)))
+  );
+
+  const currencyFormatter = new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 2,
+  });
+
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Card
-          className={`${darkMode ? "bg-gray-800 border-gray-700" : "bg-white"}`}
-        >
-          <CardHeader className="pb-2">
-            <CardTitle
-              className={`text-sm font-medium ${
-                darkMode ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
-              Total Balance
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div
-              className={`text-3xl font-bold ${
-                darkMode ? "text-white" : "text-gray-900"
-              }`}
-            >
-              ₹2000.00
-            </div>
-            <p className="text-sm text-green-500 mt-1 flex items-center">
-              <span>↑ 0% from last month</span>
-            </p>
-          </CardContent>
-        </Card>
+        <InfoCard
+          icon={TrendingUp}
+          label="Total Balance"
+          value={currencyFormatter.format(totalBalance)}
+          color="bg-purple-500"
+          darkMode={darkMode}
+        />
+        <InfoCard
+          icon={DollarSign}
+          label="Monthly Income"
+          value={currencyFormatter.format(totalIncome)}
+          color="bg-cyan-500"
+          darkMode={darkMode}
+        />
 
-        <Card
-          className={`${darkMode ? "bg-gray-800 border-gray-700" : "bg-white"}`}
-        >
-          <CardHeader className="pb-2">
-            <CardTitle
-              className={`text-sm font-medium ${
-                darkMode ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
-              Monthly Income
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-cyan-500">₹7000.00</div>
-            <p
-              className={`text-sm ${
-                darkMode ? "text-gray-500" : "text-gray-500"
-              } mt-1`}
-            >
-              📅 This month
-            </p>
-          </CardContent>
-        </Card>
+        <InfoCard
+          icon={CreditCard}
+          label="Monthly Expenses"
+          value={currencyFormatter.format(Math.abs(totalExpense))}
+          color="bg-red-500"
+          darkMode={darkMode}
+        />
 
-        <Card
-          className={`${darkMode ? "bg-gray-800 border-gray-700" : "bg-white"}`}
-        >
-          <CardHeader className="pb-2">
-            <CardTitle
-              className={`text-sm font-medium ${
-                darkMode ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
-              Monthly Expenses
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-red-500">₹5000.00</div>
-            <p
-              className={`text-sm ${
-                darkMode ? "text-gray-500" : "text-gray-500"
-              } mt-1`}
-            >
-              📅 This month
-            </p>
-          </CardContent>
-        </Card>
+        <InfoCard
+          icon={Percent}
+          label="Savings Rate"
+          value={`${savingsRate}%`}
+          color="bg-green-500"
+          darkMode={darkMode}
+        />
+      </div>
 
-        <Card
-          className={`${darkMode ? "bg-gray-800 border-gray-700" : "bg-white"}`}
-        >
-          <CardHeader className="pb-2">
-            <CardTitle
-              className={`text-sm font-medium ${
-                darkMode ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
-              Savings Rate
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div
-              className={`text-3xl font-bold ${
-                darkMode ? "text-white" : "text-gray-900"
-              }`}
-            >
-              0%
-            </div>
-            <p
-              className={`text-sm ${
-                darkMode ? "text-gray-500" : "text-gray-500"
-              } mt-1`}
-            >
-              % Of income
-            </p>
-          </CardContent>
-        </Card>
+      {/* Recent Transactions  */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <RecentTransactions
+          darkMode={darkMode}
+          transaction={dashboardData?.recentTransactions || []}
+          onSeeMore={() => navigate("/expense")}
+        />
+      </div>
+
+      {/* Financial Overview */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <FinancialOverview
+          darkMode={darkMode}
+          totalBalance={totalBalance}
+          totalIncome={totalIncome}
+          totalExpense={totalExpense}
+        />
       </div>
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Spending by Category */}
-        <Card
+        {/* <Card
           className={`${darkMode ? "bg-gray-800 border-gray-700" : "bg-white"}`}
         >
           <CardHeader>
@@ -134,41 +149,50 @@ export default function DashboardMain({ darkMode }) {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {categories.map((category, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div
-                      className={`w-3 h-3 rounded-full ${category.color}`}
-                    ></div>
+              {categories.map((category, index) => {
+                const value = Number(category.value ?? 0);
+                const pct = Math.round(
+                  (Math.abs(value) / maxCategoryValue) * 100
+                );
+                return (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div
+                        className={`w-3 h-3 rounded-full ${category.color}`}
+                      ></div>
+                      <span
+                        className={`text-sm ${
+                          darkMode ? "text-gray-300" : "text-gray-700"
+                        }`}
+                      >
+                        {category.name}
+                      </span>
+                    </div>
+                    <div className="w-48 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full ${category.color}`}
+                        style={{ width: `${pct}%` }}
+                      ></div>
+                    </div>
                     <span
-                      className={`text-sm ${
-                        darkMode ? "text-gray-300" : "text-gray-700"
-                      }`}
+                      className={`text-sm font-medium ${
+                        darkMode ? "text-gray-400" : "text-gray-600"
+                      } w-12 text-right`}
                     >
-                      {category.name}
+                      {currencyFormatter.format(Math.abs(value))}
                     </span>
                   </div>
-                  <div className="w-48 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full ${category.color}`}
-                      style={{ width: `${category.value}%` }}
-                    ></div>
-                  </div>
-                  <span
-                    className={`text-sm font-medium ${
-                      darkMode ? "text-gray-400" : "text-gray-600"
-                    } w-12 text-right`}
-                  >
-                    ₹{category.value}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
 
         {/* Monthly Overview */}
-        <Card
+        {/* <Card
           className={`${darkMode ? "bg-gray-800 border-gray-700" : "bg-white"}`}
         >
           <CardHeader>
@@ -213,16 +237,16 @@ export default function DashboardMain({ darkMode }) {
               </span>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
 
       {/* Export Button */}
-      <div className="mt-8 flex justify-center">
+      {/* <div className="mt-8 flex justify-center">
         <button className="flex items-center space-x-2 px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all shadow-md">
           <Download className="w-5 h-5" />
           <span className="font-medium">Export Data</span>
         </button>
-      </div>
+      </div> */}
     </main>
   );
 }

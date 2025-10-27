@@ -14,7 +14,7 @@ exports.getDahsboardData = async (req, res) => {
 
     // fetch total income and total expense using aggregation
     const totalIncome = await Income.aggregate([
-      { $match: { user: userObjectId } },
+      { $match: { userId: userObjectId } },
       { $group: { _id: null, total: { $sum: "$amount" } } },
     ]);
 
@@ -24,7 +24,7 @@ exports.getDahsboardData = async (req, res) => {
     });
 
     const totalExpense = await Expense.aggregate([
-      { $match: { user: userObjectId } },
+      { $match: { userId: userObjectId } },
       { $group: { _id: null, total: { $sum: "$amount" } } },
     ]);
 
