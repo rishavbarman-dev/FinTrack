@@ -14,6 +14,9 @@ import axiosInstance from "@/utils/axiosInstance";
 import InfoCard from "../card/InfoCard";
 import RecentTransactions from "./RecentTransaction";
 import FinancialOverview from "./FinancialOverview";
+import ExpenseTransactions from "./ExpenseTransactions";
+import Last30DaysExpenses from "./Last30DaysExpenses";
+import RecentIncomeWithChart from "./RecentIncomeWithChart";
 
 export default function DashboardMain({ darkMode }) {
   // fallback demo categories (used if API doesn't return categories)
@@ -124,120 +127,32 @@ export default function DashboardMain({ darkMode }) {
           transaction={dashboardData?.recentTransactions || []}
           onSeeMore={() => navigate("/expense")}
         />
-      </div>
 
-      {/* Financial Overview */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <FinancialOverview
           darkMode={darkMode}
           totalBalance={totalBalance}
           totalIncome={totalIncome}
           totalExpense={totalExpense}
         />
-      </div>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Spending by Category */}
-        {/* <Card
-          className={`${darkMode ? "bg-gray-800 border-gray-700" : "bg-white"}`}
-        >
-          <CardHeader>
-            <CardTitle className="text-xl font-bold bg-gradient-to-r from-purple-500 to-indigo-600 bg-clip-text text-transparent">
-              Spending by Category
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {categories.map((category, index) => {
-                const value = Number(category.value ?? 0);
-                const pct = Math.round(
-                  (Math.abs(value) / maxCategoryValue) * 100
-                );
-                return (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div
-                        className={`w-3 h-3 rounded-full ${category.color}`}
-                      ></div>
-                      <span
-                        className={`text-sm ${
-                          darkMode ? "text-gray-300" : "text-gray-700"
-                        }`}
-                      >
-                        {category.name}
-                      </span>
-                    </div>
-                    <div className="w-48 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full ${category.color}`}
-                        style={{ width: `${pct}%` }}
-                      ></div>
-                    </div>
-                    <span
-                      className={`text-sm font-medium ${
-                        darkMode ? "text-gray-400" : "text-gray-600"
-                      } w-12 text-right`}
-                    >
-                      {currencyFormatter.format(Math.abs(value))}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card> */}
+        <ExpenseTransactions
+          darkMode={darkMode}
+          transaction={dashboardData?.last30DaysExpenses?.transactions || []}
+          onSeeMore={() => navigate("/expense")}
+        />
 
-        {/* Monthly Overview */}
-        {/* <Card
-          className={`${darkMode ? "bg-gray-800 border-gray-700" : "bg-white"}`}
-        >
-          <CardHeader>
-            <CardTitle className="text-xl font-bold bg-gradient-to-r from-purple-500 to-indigo-600 bg-clip-text text-transparent">
-              Monthly Overview
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-end justify-center space-x-12 h-64">
-              <div className="flex flex-col items-center space-y-2">
-                <div className="relative w-32">
-                  <div className="h-48 bg-gradient-to-t from-cyan-400 to-cyan-500 rounded-t-lg shadow-lg"></div>
-                </div>
-                <span
-                  className={`text-sm font-medium ${
-                    darkMode ? "text-gray-400" : "text-gray-600"
-                  }`}
-                >
-                  Income
-                </span>
-              </div>
-              <div className="flex flex-col items-center space-y-2">
-                <div className="relative w-32">
-                  <div className="h-12 bg-gradient-to-t from-red-500 to-red-600 rounded-t-lg shadow-lg"></div>
-                </div>
-                <span
-                  className={`text-sm font-medium ${
-                    darkMode ? "text-gray-400" : "text-gray-600"
-                  }`}
-                >
-                  Expenses
-                </span>
-              </div>
-            </div>
-            <div className="text-center mt-4">
-              <span
-                className={`text-sm ${
-                  darkMode ? "text-gray-500" : "text-gray-500"
-                }`}
-              >
-                September 25
-              </span>
-            </div>
-          </CardContent>
-        </Card> */}
+        <Last30DaysExpenses
+          darkMode={darkMode}
+          data={dashboardData?.last30DaysExpenses?.transactions || []}
+        />
+
+        <RecentIncomeWithChart
+          darkMode={darkMode}
+          data={
+            dashboardData?.last60DaysIncomes?.transactions?.slice(0, 4) || []
+          }
+          totalIncome={dashboardData?.totalIncome || 0}
+        />
       </div>
 
       {/* Export Button */}

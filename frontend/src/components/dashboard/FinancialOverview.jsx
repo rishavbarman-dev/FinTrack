@@ -1,4 +1,3 @@
-// ...existing code...
 import React from "react";
 import CustomPieChart from "../charts/CustomPieChart";
 
@@ -18,7 +17,7 @@ export default function FinancialOverview({
 
   return (
     <div
-      className={`p-4 rounded-md shadow-sm mt-7 ${
+      className={`p-4 rounded-md shadow-sm ${
         darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
       }`}
     >
