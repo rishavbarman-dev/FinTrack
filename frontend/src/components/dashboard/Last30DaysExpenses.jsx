@@ -6,10 +6,23 @@ const Last30DaysExpenses = ({ data = [], darkMode = false }) => {
   const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
+    if (!Array.isArray(data) || data.length === 0) {
+      console.log("Waiting for expense data...");
+      return;
+    }
+
     const result = prepareExpenseBarChartData(data);
     setChartData(result);
-    return () => {};
+    console.log("Last30DaysExpenses:", result);
   }, [data]);
+
+  // useEffect(() => {
+  //   const expensesArray = data?.transactions || [];
+  //   const result = prepareExpenseBarChartData(expensesArray);
+  //   setChartData(result);
+  //   console.log("Last30DaysExpenses", result);
+  //   return () => {};
+  // }, [data]);
 
   return (
     <div

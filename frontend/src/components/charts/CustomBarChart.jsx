@@ -10,14 +10,15 @@ import {
   YAxis,
 } from "recharts";
 
-const CustomBarChart = ({ data = [], darkMode = false }) => {
+const CustomBarChart = ({ data = [], darkMode = false, xKey = "category" }) => {
+  const chartData = Array.isArray(data) ? data : [];
   const getBarColor = (index) => (index % 2 === 0 ? "#875cf5" : "#a78bfa");
 
   const MyTooltip = ({ active, payload }) => {
     if (active && payload && payload.length > 0) {
       const d = payload[0].payload;
       const containerClass = darkMode
-        ? "bg-red-900 text-gray-100 border border-gray-800"
+        ? "bg-gray-900 text-gray-100 border border-gray-800"
         : "bg-white text-gray-900 border border-gray-100";
       return (
         <div
@@ -36,6 +37,20 @@ const CustomBarChart = ({ data = [], darkMode = false }) => {
     return null;
   };
 
+  if (!chartData.length) {
+    return (
+      <div
+        className={
+          darkMode
+            ? "bg-gray-800 p-4 rounded-md text-gray-300"
+            : "bg-white p-4 rounded-md shadow-sm text-gray-600"
+        }
+      >
+        <div className="text-sm">No data to display</div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={
@@ -51,7 +66,7 @@ const CustomBarChart = ({ data = [], darkMode = false }) => {
             vertical={false}
           />
           <XAxis
-            dataKey="month"
+            dataKey={xKey}
             tick={{ fontSize: 12, fill: darkMode ? "#e5e7eb" : "#4b5563" }}
             axisLine={false}
             tickLine={false}

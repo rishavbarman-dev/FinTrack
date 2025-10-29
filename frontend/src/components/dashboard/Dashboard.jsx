@@ -17,10 +17,11 @@ import logo from "../../assets/images/logo.png";
 import Transactions from "../main-content/Transactions";
 import { UserContext } from "@/context/UserContext";
 import { useNavigate } from "react-router-dom";
+import Income from "../main-content/Income";
 
 const menuItems = [
   { id: "dashboard", label: "Dashboard", icon: Home },
-  { id: "transactions", label: "Income", icon: TrendingUp },
+  { id: "income", label: "Income", icon: TrendingUp },
   { id: "budgets", label: "Expense", icon: TrendingDown },
   { id: "reports", label: "Reports", icon: Receipt },
   { id: "goals", label: "Savings Goals", icon: Target },
@@ -57,7 +58,7 @@ const Dashboard = () => {
       case "dashboard":
         return <DashboardMain darkMode={darkMode} />;
       case "income":
-        return <Transactions darkMode={darkMode} />;
+        return <Income darkMode={darkMode} />;
       case "expense":
         return <div className="p-8">Budgets Content</div>;
       case "reports":
