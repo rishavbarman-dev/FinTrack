@@ -2,9 +2,16 @@ import { API_PATHS } from "@/utils/apiPaths";
 import axiosInstance from "@/utils/axiosInstance";
 import React, { useEffect, useState } from "react";
 import IncomeOverview from "../income/IncomeOverview";
+import Model from "../Model";
+import AddIncomeForm from "../income/AddIncomeForm";
+import toast from "react-hot-toast";
+import IncomeList from "../income/IncomeList";
+import DeleteAlert from "../DeleteAlert";
+import { useUserAuth } from "@/hooks/useUserAuth";
 
 const Income = ({ darkMode }) => {
-  const [openAddModel, setOpenAddIncomeModel] = useState(false);
+  useUserAuth();
+  const [openAddIncomeModel, setOpenAddIncomeModel] = useState(false);
 
   const [incomeData, setIncomeData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -37,10 +44,52 @@ const Income = ({ darkMode }) => {
   };
 
   //   Handle Add Income
-  const handleAddIncome = async (income) => {};
+  const handleAddIncome = async (income) => {
+    const { source, amount, date } = income;
+
+    // Validation checks
+    if (!source || !String(source).trim()) {
+      toast.error("Sorce is required.");
+      return;
+    }
+
+    if (!amount || isNaN(amount) || Number(amount) <= 0) {
+      toast.error("Amount should be a valid number grater than 0.");
+      return;
+    }
+
+    try {
+      await axiosInstance.post(API_PATHS.INCOME.ADD_INCOME, {
+        source,
+        amount,
+        date,
+      });
+
+      setOpenAddIncomeModel(false);
+      toast.success("Income added successfully.");
+      fetchIncomeDetails();
+    } catch (error) {
+      console.error(
+        "Error adding income",
+        error.respone?.data?.message || error.message
+      );
+    }
+  };
 
   //   Delete Income
-  const deleteIncome = async (id) => {};
+  const deleteIncome = async (id) => {
+    try {
+      await axiosInstance.delete(API_PATHS.INCOME.DELETE_INCOME(id));
+      setOpenDeleteAlert({ show: false, data: null });
+      toast.success("Income deleted successfully");
+      fetchIncomeDetails();
+    } catch (error) {
+      console.error(
+        "Error deleting income",
+        error.respone?.data?.message || error.message
+      );
+    }
+  };
 
   //   Handle download income details
   const handleDownloadIncomeDetails = async () => {};
@@ -61,7 +110,41 @@ const Income = ({ darkMode }) => {
             transactions={incomeData}
             onAddIncome={() => setOpenAddIncomeModel(true)}
           />
+
+          <IncomeList
+            transactions={incomeData}
+            onDelete={(id) => {
+              setOpenDeleteAlert({ show: true, data: id });
+            }}
+            onDownload={handleDownloadIncomeDetails}
+          />
         </div>
+
+        <Model
+          darkMode={darkMode}
+          isOpen={openAddIncomeModel}
+          onClose={() => setOpenAddIncomeModel(false)}
+          title="Add Income"
+        >
+          <AddIncomeForm
+            onAddIncome={handleAddIncome}
+            initialValues={{}}
+            onCancel={() => setShowAddModal(false)}
+            darkMode={darkMode}
+          />
+        </Model>
+
+        <Model
+          isOpen={openDeleteAlert.show}
+          onClose={() => setOpenDeleteAlert({ show: false, data: null })}
+          title="Delete Income"
+        >
+          <DeleteAlert
+            content="Are you sure you want to delete income details?"
+            onDelete={() => deleteIncome(openDeleteAlert.data)}
+            onCancel={() => setShowAlert(false)}
+          />
+        </Model>
 
         {/* Export Button */}
         {/* <div className="mt-8 flex justify-center">
