@@ -6,7 +6,7 @@ export default function TransactionInfoCard({
   icon,
   date,
   amount = 0,
-  type = "expense",
+  type = "",
   hideDeleteBtn = false,
   onDelete,
   darkMode = false,

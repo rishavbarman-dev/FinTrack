@@ -17,6 +17,7 @@ import FinancialOverview from "./FinancialOverview";
 import ExpenseTransactions from "./ExpenseTransactions";
 import Last30DaysExpenses from "./Last30DaysExpenses";
 import RecentIncomeWithChart from "./RecentIncomeWithChart";
+import RecentIncomes from "./RecentIncomes";
 
 export default function DashboardMain({ darkMode }) {
   // fallback demo categories (used if API doesn't return categories)
@@ -152,6 +153,12 @@ export default function DashboardMain({ darkMode }) {
             dashboardData?.last60DaysIncomes?.transactions?.slice(0, 4) || []
           }
           totalIncome={dashboardData?.totalIncome || 0}
+        />
+
+        <RecentIncomes
+          darkMode={darkMode}
+          transaction={dashboardData?.last60DaysIncomes?.transactions || []}
+          onSeeMore={() => navigate("/income")}
         />
       </div>
 
