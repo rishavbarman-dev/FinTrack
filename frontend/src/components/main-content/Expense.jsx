@@ -1,40 +1,40 @@
+import { useUserAuth } from "@/hooks/useUserAuth";
 import { API_PATHS } from "@/utils/apiPaths";
 import axiosInstance from "@/utils/axiosInstance";
 import React, { useEffect, useState } from "react";
-import IncomeOverview from "../income/IncomeOverview";
-import Model from "../Model";
-import AddIncomeForm from "../income/AddIncomeForm";
 import toast from "react-hot-toast";
-import IncomeList from "../income/IncomeList";
+import ExpenseOverview from "../expense/ExpenseOverview";
+import Model from "../Model";
+import AddExpenseForm from "../expense/AddExpenseForm";
+import ExpenseList from "../expense/ExpenseList";
 import DeleteAlert from "../DeleteAlert";
-import { useUserAuth } from "@/hooks/useUserAuth";
 
-const Income = ({ darkMode }) => {
+const Expense = ({ darkMode }) => {
   useUserAuth();
-  const [openAddIncomeModel, setOpenAddIncomeModel] = useState(false);
+  const [openAddExpenseModel, setOpenAddExpenseModel] = useState(false);
 
-  const [incomeData, setIncomeData] = useState([]);
+  const [expenseData, setExpenseData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [openDeleteAlert, setOpenDeleteAlert] = useState({
     show: false,
     data: null,
   });
 
-  //   Get all income details
-  const fetchIncomeDetails = async () => {
+  //   Get all expense details
+  const fetchExpenseDetails = async () => {
     if (loading) return;
     setLoading(true);
 
     try {
       const respone = await axiosInstance.get(
-        `${API_PATHS.INCOME.GET_ALL_INCOME}`
+        `${API_PATHS.EXPENSE.GET_ALL_EXPENSE}`
       );
 
       if (respone.data) {
-        const incomes = Array.isArray(respone.data)
+        const expenses = Array.isArray(respone.data)
           ? respone.data
-          : respone.data?.incomes || respone.data?.data || [];
-        setIncomeData(incomes);
+          : respone.data?.expenses || respone.data?.data || [];
+        setExpenseData(expenses);
       }
     } catch (error) {
       console.log("Something went wrong! Try agin", error);
@@ -43,13 +43,13 @@ const Income = ({ darkMode }) => {
     }
   };
 
-  //   Handle Add Income
-  const handleAddIncome = async (income) => {
-    const { source, amount, date } = income;
+  //   Handle Add Expense
+  const handleAddExpense = async (expense) => {
+    const { category, amount, date } = expense;
 
     // Validation checks
-    if (!source || !String(source).trim()) {
-      toast.error("Sorce is required.");
+    if (!category || !String(category).trim()) {
+      toast.error("Category is required.");
       return;
     }
 
@@ -59,43 +59,43 @@ const Income = ({ darkMode }) => {
     }
 
     try {
-      await axiosInstance.post(API_PATHS.INCOME.ADD_INCOME, {
-        source,
+      await axiosInstance.post(API_PATHS.EXPENSE.ADD_EXPENSE, {
+        category,
         amount,
         date,
       });
 
-      setOpenAddIncomeModel(false);
-      toast.success("Income added successfully.");
-      fetchIncomeDetails();
+      setOpenAddExpenseModel(false);
+      toast.success("Expense added successfully.");
+      fetchExpenseDetails();
     } catch (error) {
       console.error(
-        "Error adding income",
+        "Error adding expense",
         error.respone?.data?.message || error.message
       );
     }
   };
 
   //   Delete Income
-  const deleteIncome = async (id) => {
+  const deleteExpense = async (id) => {
     try {
-      await axiosInstance.delete(API_PATHS.INCOME.DELETE_INCOME(id));
+      await axiosInstance.delete(API_PATHS.EXPENSE.DELETE_EXPENSE(id));
       setOpenDeleteAlert({ show: false, data: null });
-      toast.success("Income deleted successfully");
-      fetchIncomeDetails();
+      toast.success("Expense deleted successfully");
+      fetchExpenseDetails();
     } catch (error) {
       console.error(
-        "Error deleting income",
+        "Error deleting expense",
         error.respone?.data?.message || error.message
       );
     }
   };
 
-  //   Handle download income details
-  const handleDownloadIncomeDetails = async () => {
+  //   Handle download expense details
+  const handleDownloadExpenseDetails = async () => {
     try {
       const response = await axiosInstance.get(
-        API_PATHS.INCOME.DOWNLOAD_INCOME,
+        API_PATHS.EXPENSE.DOWNLOAD_EXPENSE,
         {
           responseType: "blob",
         }
@@ -105,51 +105,50 @@ const Income = ({ darkMode }) => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "income_details.xlsx");
+      link.setAttribute("download", "expense_details.xlsx");
       document.body.appendChild(link);
       link.click();
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error("Error downloading Income details", error);
-      toast.error("Failed to download income details. Please try again later");
+      console.error("Error downloading expense details", error);
+      toast.error("Failed to download expense details. Please try again later");
     }
   };
 
   useEffect(() => {
-    fetchIncomeDetails();
-
+    fetchExpenseDetails();
     return () => {};
-  }, [fetchIncomeDetails]);
+  }, []);
 
   return (
     <div>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Income Overview  */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <IncomeOverview
+          <ExpenseOverview
             darkMode={darkMode}
-            transactions={incomeData}
-            onAddIncome={() => setOpenAddIncomeModel(true)}
+            transactions={expenseData}
+            onAddExpense={() => setOpenAddExpenseModel(true)}
           />
 
-          <IncomeList
-            transactions={incomeData}
+          <ExpenseList
+            transactions={expenseData}
             onDelete={(id) => {
               setOpenDeleteAlert({ show: true, data: id });
             }}
-            onDownload={handleDownloadIncomeDetails}
+            onDownload={handleDownloadExpenseDetails}
           />
         </div>
 
         <Model
           darkMode={darkMode}
-          isOpen={openAddIncomeModel}
-          onClose={() => setOpenAddIncomeModel(false)}
-          title="Add Income"
+          isOpen={openAddExpenseModel}
+          onClose={() => setOpenAddExpenseModel(false)}
+          title="Add Expense"
         >
-          <AddIncomeForm
-            onAddIncome={handleAddIncome}
+          <AddExpenseForm
+            onAddExpense={handleAddExpense}
             initialValues={{}}
             onCancel={() => setShowAddModal(false)}
             darkMode={darkMode}
@@ -159,11 +158,11 @@ const Income = ({ darkMode }) => {
         <Model
           isOpen={openDeleteAlert.show}
           onClose={() => setOpenDeleteAlert({ show: false, data: null })}
-          title="Delete Income"
+          title="Delete Expense"
         >
           <DeleteAlert
-            content="Are you sure you want to delete income details?"
-            onDelete={() => deleteIncome(openDeleteAlert.data)}
+            content="Are you sure you want to delete expense details?"
+            onDelete={() => deleteExpense(openDeleteAlert.data)}
             onCancel={() => setShowAlert(false)}
           />
         </Model>
@@ -180,4 +179,4 @@ const Income = ({ darkMode }) => {
   );
 };
 
-export default Income;
+export default Expense;

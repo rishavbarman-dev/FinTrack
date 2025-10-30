@@ -18,11 +18,12 @@ import Transactions from "../main-content/Transactions";
 import { UserContext } from "@/context/UserContext";
 import { useNavigate } from "react-router-dom";
 import Income from "../main-content/Income";
+import Expense from "../main-content/Expense";
 
 const menuItems = [
   { id: "dashboard", label: "Dashboard", icon: Home },
   { id: "income", label: "Income", icon: TrendingUp },
-  { id: "budgets", label: "Expense", icon: TrendingDown },
+  { id: "expense", label: "Expense", icon: TrendingDown },
   { id: "reports", label: "Reports", icon: Receipt },
   { id: "goals", label: "Savings Goals", icon: Target },
 ];
@@ -60,7 +61,7 @@ const Dashboard = () => {
       case "income":
         return <Income darkMode={darkMode} />;
       case "expense":
-        return <div className="p-8">Budgets Content</div>;
+        return <Expense darkMode={darkMode} />;
       case "reports":
         return <div className="p-8">Reports Content</div>;
       // case "goals":
