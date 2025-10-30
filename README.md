@@ -26,6 +26,7 @@ A modern, fast, and responsive web-based personal finance tracker built with **R
 git clone https://github.com/rishavbarman-dev/FinTrack.git
 cd fintrack
 cd frontend
+cd backend
 ```
 
 ### 2. Install dependencies
@@ -82,8 +83,31 @@ fintrack/
     ├── vite.config.js      # Vite configuration
     ├── tailwind.config.js  # Tailwind CSS configuration
     └── README.md           # This file
-```
 
+├── backend
+    ├── config
+    │   ├── db.js
+    ├── controllers
+    │   ├── authController.js
+    │   ├── dashboardController.js
+    │   ├── expenseController.js
+    │   └── incomeController.js
+    ├── middleware
+    │   ├── authMiddleware.js
+    ├── models
+    │   ├── Expense.js
+    │   ├── Income.js
+    │   ├── User.js
+    ├── package-lock.json
+    ├── package.json
+    ├── routes
+    │   ├── authRoutes.js
+    │   ├── dashboardRoutes.js
+    │   ├── expenseRoutes.js
+    │   └── incomeRoutes.js
+    ├── server.js
+    └── utils
+```
 ---
 
 ## 🧹 Code Quality
