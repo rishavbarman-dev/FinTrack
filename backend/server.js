@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes.js";
 import incomeRoutes from "./routes/incomeRoutes.js";
 import expenseRoutes from "./routes/expenseRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
+import budgetRoutes from "./routes/budgetRoutes.js";
 
 // Load environment variables
 dotenv.config();
@@ -33,6 +34,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/income", incomeRoutes);
 app.use("/api/v1/expense", expenseRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);
+app.use("/api/v1/budget", budgetRoutes);
 
 const PORT = process.env.PORT || 3000;
 
