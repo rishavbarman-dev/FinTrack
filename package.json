@@ -21,7 +21,11 @@
   },
   "homepage": "https://github.com/rishavbarman-dev/FinTrack#readme",
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "@eslint/js": "^9.38.0",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.38.0",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.4.0"
   },
   "dependencies": {
     "nodemon": "^3.1.10"
