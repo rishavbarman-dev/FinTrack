@@ -1,7 +1,7 @@
-const xlsx = require("xlsx");
-const Expense = require("../models/Expense.js");
+import xlsx from "xlsx";
+import Expense from "../models/Expense.js";
 
-exports.addExpense = async (req, res) => {
+export const addExpense = async (req, res) => {
   const userId = req.user.id;
 
   try {
@@ -29,7 +29,7 @@ exports.addExpense = async (req, res) => {
   }
 };
 
-exports.getAllExpense = async (req, res) => {
+export const getAllExpense = async (req, res) => {
   const userId = req.user.id;
   try {
     const expenses = await Expense.find({ userId }).sort({ date: -1 });
@@ -39,7 +39,7 @@ exports.getAllExpense = async (req, res) => {
   }
 };
 
-exports.deleteExpense = async (req, res) => {
+export const deleteExpense = async (req, res) => {
   try {
     await Expense.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: "Expense deleted successfully" });
@@ -48,14 +48,13 @@ exports.deleteExpense = async (req, res) => {
   }
 };
 
-exports.downloadExpenseExcel = async (req, res) => {
+export const downloadExpenseExcel = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const expense = await Expense.find({ userId }).sort({ date: -1 });
+    const expenses = await Expense.find({ userId }).sort({ date: -1 });
 
-    //Prepare excel data
-    const data = expense.map((item) => ({
+    const data = expenses.map((item) => ({
       Category: item.category,
       Amount: item.amount,
       Date: item.date.toISOString().split("T")[0],
@@ -64,8 +63,10 @@ exports.downloadExpenseExcel = async (req, res) => {
     const wb = xlsx.utils.book_new();
     const ws = xlsx.utils.json_to_sheet(data);
     xlsx.utils.book_append_sheet(wb, ws, "Expenses");
-    xlsx.writeFile(wb, "Expenses.xlsx");
-    res.download("Expenses.xlsx");
+
+    const filePath = "Expenses.xlsx";
+    xlsx.writeFile(wb, filePath);
+    res.download(filePath);
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }

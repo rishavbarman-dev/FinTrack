@@ -1,11 +1,12 @@
-const User = require("../models/User");
-const jwt = require("jsonwebtoken");
+import User from "../models/User.js";
+import jwt from "jsonwebtoken";
 
 const generateToken = (id) => {
+  // eslint-disable-next-line no-undef
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 };
 
-exports.registerUser = async (req, res) => {
+export const registerUser = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
   // Validation
@@ -16,7 +17,7 @@ exports.registerUser = async (req, res) => {
   }
 
   try {
-    // if email already exists
+    // Check if email already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already in use." });
@@ -36,7 +37,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-exports.loginUser = async (req, res) => {
+export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -50,17 +51,20 @@ exports.loginUser = async (req, res) => {
     if (!user || !(await user.matchPassword(password))) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
-    res
-      .status(200)
-      .json({ id: user._id, user, token: generateToken(user._id) });
+
+    res.status(200).json({
+      id: user._id,
+      user,
+      token: generateToken(user._id),
+    });
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Error registering user.", error: error.message });
+      .json({ message: "Error logging in user.", error: error.message });
   }
 };
 
-exports.getUserInfo = async (req, res) => {
+export const getUserInfo = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
     if (!user) {

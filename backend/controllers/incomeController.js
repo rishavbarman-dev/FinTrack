@@ -1,7 +1,7 @@
-const xlsx = require("xlsx");
-const Income = require("../models/Income.js");
+import xlsx from "xlsx";
+import Income from "../models/Income.js";
 
-exports.addIncome = async (req, res) => {
+export const addIncome = async (req, res) => {
   const userId = req.user.id;
 
   try {
@@ -29,7 +29,7 @@ exports.addIncome = async (req, res) => {
   }
 };
 
-exports.getAllIncome = async (req, res) => {
+export const getAllIncome = async (req, res) => {
   const userId = req.user.id;
   try {
     const incomes = await Income.find({ userId }).sort({ date: -1 });
@@ -39,7 +39,7 @@ exports.getAllIncome = async (req, res) => {
   }
 };
 
-exports.deleteIncome = async (req, res) => {
+export const deleteIncome = async (req, res) => {
   try {
     await Income.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: "Income deleted successfully" });
@@ -48,13 +48,12 @@ exports.deleteIncome = async (req, res) => {
   }
 };
 
-exports.downloadIncomeExcel = async (req, res) => {
+export const downloadIncomeExcel = async (req, res) => {
   const userId = req.user.id;
 
   try {
     const income = await Income.find({ userId }).sort({ date: -1 });
 
-    //Prepare excel data
     const data = income.map((item) => ({
       Source: item.source,
       Amount: item.amount,
@@ -64,8 +63,10 @@ exports.downloadIncomeExcel = async (req, res) => {
     const wb = xlsx.utils.book_new();
     const ws = xlsx.utils.json_to_sheet(data);
     xlsx.utils.book_append_sheet(wb, ws, "Incomes");
-    xlsx.writeFile(wb, "Incomes.xlsx");
-    res.download("Incomes.xlsx");
+
+    const filePath = "Incomes.xlsx";
+    xlsx.writeFile(wb, filePath);
+    res.download(filePath);
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }

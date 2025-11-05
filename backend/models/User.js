@@ -1,6 +1,5 @@
-const mongoose = require("mongoose");
-
-const bycrypt = require("bcryptjs");
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const UserSchema = new mongoose.Schema(
   {
@@ -30,14 +29,14 @@ const UserSchema = new mongoose.Schema(
 // Hash password before saving the user model
 UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-
-  this.password = await bycrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
 // Method to compare entered password with hashed password
 UserSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bycrypt.compare(enteredPassword, this.password);
+  return await bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.model("User", UserSchema);
+const User = mongoose.model("User", UserSchema);
+export default User;

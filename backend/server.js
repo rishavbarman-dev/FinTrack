@@ -1,16 +1,19 @@
-const express = require("express");
-require("dotenv").config();
-const cors = require("cors");
-const path = require("path");
-const connectDB = require("./config/db");
-const authRoutes = require("./routes/authRoutes");
-const incomeRoutes = require("./routes/incomeRoutes");
-const expenseRoutes = require("./routes/expenseRoutes");
-const dashboardRoutes = require("./routes/dashboardRoutes.js");
+/* eslint-disable no-undef */
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import connectDB from "./config/db.js";
+import authRoutes from "./routes/authRoutes.js";
+import incomeRoutes from "./routes/incomeRoutes.js";
+import expenseRoutes from "./routes/expenseRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
 
-//Middleware to handle cors
+// Middleware to handle CORS
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "*",
@@ -19,10 +22,13 @@ app.use(
   })
 );
 
+// Middleware to parse JSON
 app.use(express.json());
 
+// Connect to MongoDB
 connectDB();
 
+// Routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/income", incomeRoutes);
 app.use("/api/v1/expense", expenseRoutes);
@@ -30,6 +36,7 @@ app.use("/api/v1/dashboard", dashboardRoutes);
 
 const PORT = process.env.PORT || 3000;
 
+// Root endpoint
 app.get("/", (req, res) => {
   res.send("Welcome to the Fintrack backend!");
 });

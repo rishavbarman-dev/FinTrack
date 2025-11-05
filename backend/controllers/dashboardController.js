@@ -1,18 +1,17 @@
-const Income = require("../models/Income");
-const Expense = require("../models/Expense");
+import Income from "../models/Income.js";
+import Expense from "../models/Expense.js";
+import mongoose from "mongoose";
 
-const { isValidObjectId, Types } = require("mongoose");
+const { isValidObjectId, Types } = mongoose;
 
-// NOTE: ISSUE IN THE TOTAL BALANCE CALCULATION LOGIC HERE
-
-exports.getDahsboardData = async (req, res) => {
+export const getDahsboardData = async (req, res) => {
   try {
     const userId = req.user.id;
     const userObjectId = isValidObjectId(userId)
       ? new Types.ObjectId(String(userId))
       : userId;
 
-    // fetch total income and total expense using aggregation
+    // Fetch total income and total expense using aggregation
     const totalIncome = await Income.aggregate([
       { $match: { userId: userObjectId } },
       { $group: { _id: null, total: { $sum: "$amount" } } },
@@ -39,9 +38,9 @@ exports.getDahsboardData = async (req, res) => {
       date: { $gte: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000) },
     }).sort({ date: -1 });
 
-    // Get total Income fot last 60 days
+    // Get total income for last 60 days
     const incomeLast60Days = last60DaysIncomeTrabsactions.reduce(
-      (sum, transactions) => sum + transactions.amount,
+      (sum, txn) => sum + txn.amount,
       0
     );
 
@@ -51,9 +50,9 @@ exports.getDahsboardData = async (req, res) => {
       date: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
     }).sort({ date: -1 });
 
-    // Get total Expense fot last 30 days
+    // Get total expense for last 30 days
     const expenseLast30Days = last30DaysExpenseTrabsactions.reduce(
-      (sum, transactions) => sum + transactions.amount,
+      (sum, txn) => sum + txn.amount,
       0
     );
 
