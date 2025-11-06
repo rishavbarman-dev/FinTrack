@@ -21,4 +21,10 @@ export const API_PATHS = {
     DELETE_EXPENSE: (id) => `/api/v1/expense/delete/${id}`,
     DOWNLOAD_EXPENSE: "/api/v1/expense/download",
   },
+  BUDGET: {
+    SET_BUDGET: "/api/v1/budget",
+    GET_BUDGET: "/api/v1/budget",
+    DELETE_BUDGET: "/api/v1/budget",
+    CHECK_BUDGET: "/api/v1/budget/check",
+  },
 };

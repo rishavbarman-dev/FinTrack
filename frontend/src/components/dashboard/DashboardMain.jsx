@@ -18,23 +18,25 @@ import ExpenseTransactions from "./ExpenseTransactions";
 import Last30DaysExpenses from "./Last30DaysExpenses";
 import RecentIncomeWithChart from "./RecentIncomeWithChart";
 import RecentIncomes from "./RecentIncomes";
+import BudgetProgress from "./BudgetProgress";
 
 export default function DashboardMain({ darkMode }) {
   // fallback demo categories (used if API doesn't return categories)
-  const fallbackCategories = [
-    { name: "Food", color: "bg-red-400", value: 1000 },
-    { name: "Transportation", color: "bg-blue-400", value: 200 },
-    { name: "Housing", color: "bg-yellow-400", value: 3000 },
-    { name: "Entertainment", color: "bg-gray-400", value: 300 },
-    { name: "Shopping", color: "bg-purple-500", value: 0 },
-    { name: "Test", color: "bg-sky-400", value: 0 },
-  ];
+  // const fallbackCategories = [
+  //   { name: "Food", color: "bg-red-400", value: 1000 },
+  //   { name: "Transportation", color: "bg-blue-400", value: 200 },
+  //   { name: "Housing", color: "bg-yellow-400", value: 3000 },
+  //   { name: "Entertainment", color: "bg-gray-400", value: 300 },
+  //   { name: "Shopping", color: "bg-purple-500", value: 0 },
+  //   { name: "Test", color: "bg-sky-400", value: 0 },
+  // ];
 
   useUserAuth();
 
   const navigate = useNavigate();
 
   const [dashboardData, setDashboardData] = useState(null);
+  const [budgetData, setBudgetData] = useState();
   const [loading, setLoading] = useState(false);
 
   const fetchDashboardData = async () => {
@@ -58,8 +60,28 @@ export default function DashboardMain({ darkMode }) {
     }
   };
 
+  const fetchBudgetData = async () => {
+    if (loading) return;
+
+    setLoading(true);
+
+    try {
+      const response = await axiosInstance.get(`/api/v1/budget/check`);
+      console.log("Budget data:", response.data);
+
+      if (response.data) {
+        setBudgetData(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching budget data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchDashboardData();
+    fetchBudgetData();
     return () => {};
   }, []);
 
@@ -73,11 +95,11 @@ export default function DashboardMain({ darkMode }) {
       : 0;
 
   // categories from API if provided else fallback
-  const categories = dashboardData?.categories ?? fallbackCategories;
-  const maxCategoryValue = Math.max(
-    1,
-    ...categories.map((c) => Math.abs(Number(c.value ?? 0)))
-  );
+  // const categories = dashboardData?.categories ?? fallbackCategories;
+  // const maxCategoryValue = Math.max(
+  //   1,
+  //   ...categories.map((c) => Math.abs(Number(c.value ?? 0)))
+  // );
 
   const currencyFormatter = new Intl.NumberFormat("en-IN", {
     style: "currency",
@@ -87,6 +109,12 @@ export default function DashboardMain({ darkMode }) {
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Budget Process */}
+      <BudgetProgress
+        initialBudget={{ amount: budgetData?.budget }}
+        currentExpense={dashboardData?.totalExpense}
+      />
+
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <InfoCard

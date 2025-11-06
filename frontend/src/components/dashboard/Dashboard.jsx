@@ -25,7 +25,6 @@ const menuItems = [
   { id: "income", label: "Income", icon: TrendingUp },
   { id: "expense", label: "Expense", icon: TrendingDown },
   { id: "reports", label: "Reports", icon: Receipt },
-  { id: "goals", label: "Savings Goals", icon: Target },
 ];
 
 const Dashboard = () => {
