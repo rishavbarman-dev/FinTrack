@@ -8,6 +8,7 @@ import incomeRoutes from "./routes/incomeRoutes.js";
 import expenseRoutes from "./routes/expenseRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import budgetRoutes from "./routes/budgetRoutes.js";
+import inngestRoutes from "./routes/inngestRoutes.js";
 
 // Load environment variables
 dotenv.config();
@@ -41,6 +42,20 @@ const PORT = process.env.PORT || 3000;
 // Root endpoint
 app.get("/", (req, res) => {
   res.send("Welcome to the Fintrack backend!");
+});
+
+app.use("/api/inngest", inngestRoutes);
+
+app.post("/api/v1/send-budget-alert", async (req, res) => {
+  const { to, username, data } = req.body;
+
+  const result = await sendBudgetAlertEmail({ to, username, data });
+
+  if (!result) {
+    return res.status(500).json({ message: "Failed to send email" });
+  }
+
+  res.status(200).json({ message: "Email sent successfully", result });
 });
 
 app.listen(PORT, () => {
