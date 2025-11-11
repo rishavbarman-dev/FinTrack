@@ -12,12 +12,92 @@ import {
 
 export default function emailTemplate({
   username = "",
-  type = "budget-alert",
+  type = "monthly-report",
   data = {},
 }) {
+  console.log("📦 Email data received:", JSON.stringify(data, null, 2));
   if (type === "monthly-report") {
-    // Empty template using React.createElement syntax
-    return React.createElement(React.Fragment, null);
+    return React.createElement(
+      Html,
+      null,
+      React.createElement(Head, null),
+      React.createElement(Preview, null, `Monthly Report - ${data.month}`),
+      React.createElement(
+        Body,
+        { style: styles.body },
+        React.createElement(
+          Container,
+          { style: styles.container },
+          React.createElement(
+            Heading,
+            { style: styles.title },
+            `Monthly Report - ${data.month}`
+          ),
+          React.createElement(
+            Text,
+            { style: styles.text },
+            `Hello ${username}, here’s your monthly summary:`
+          ),
+          React.createElement(
+            Section,
+            { style: styles.statsContainer },
+            (data?.expenses?.length ?? 0) > 0
+              ? data.expenses.map((e) =>
+                  React.createElement(
+                    "div",
+                    { style: styles.stat, key: e._id },
+                    React.createElement(
+                      Text,
+                      { style: styles.text },
+                      `Expense: ${e._id}`
+                    ),
+                    React.createElement(
+                      Text,
+                      { style: styles.heading },
+                      e.total
+                    )
+                  )
+                )
+              : React.createElement(
+                  Text,
+                  { style: styles.text },
+                  "No expenses recorded"
+                )
+          ),
+          React.createElement(
+            Section,
+            { style: styles.statsContainer },
+            (data?.incomes?.length ?? 0) > 0
+              ? data.incomes.map((i) =>
+                  React.createElement(
+                    "div",
+                    { style: styles.stat, key: i._id },
+                    React.createElement(
+                      Text,
+                      { style: styles.text },
+                      `Income: ${i._id}`
+                    ),
+                    React.createElement(
+                      Text,
+                      { style: styles.heading },
+                      i.total
+                    )
+                  )
+                )
+              : React.createElement(
+                  Text,
+                  { style: styles.text },
+                  "No incomes recorded"
+                )
+          ),
+          React.createElement(
+            Text,
+            { style: styles.text },
+            `Total Expense: ${data?.insights?.totalExpense ?? 0}, Total Income: ${data?.insights?.totalIncome ?? 0}, Net Savings: ${data?.insights?.netSavings ?? 0}`
+          )
+        )
+      )
+    );
   }
 
   if (type === "budget-alert") {
