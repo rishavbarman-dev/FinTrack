@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Input } from "../ui/input";
+import TransactionButton from "../buttons/TransactionButton";
 
 export default function AddIncomeForm({
   initialValues = { source: "", amount: "", date: "" },
@@ -51,14 +52,11 @@ export default function AddIncomeForm({
         darkMode={darkMode}
       />
 
-      <div className="flex space-x-3 mt-4">
-        <button
-          onClick={() => onAddIncome(income)}
-          className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-md font-medium hover:bg-purple-700"
-        >
-          Add Income
-        </button>
-      </div>
+      <TransactionButton
+        label="Add Income"
+        onClick={() => onAddIncome(income)}
+        color="purple"
+      />
     </div>
   );
 }

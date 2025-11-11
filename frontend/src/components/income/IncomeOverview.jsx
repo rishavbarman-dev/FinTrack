@@ -2,6 +2,7 @@ import { prepareIncomeBarChartData } from "@/utils/helper";
 import React, { useEffect, useState } from "react";
 import CustomBarChart from "../charts/CustomBarChart";
 import { Plus } from "lucide-react";
+import ActionButton from "../buttons/ActionButton";
 
 const IncomeOverview = ({ darkMode, transactions, onAddIncome }) => {
   const [chartData, setChartData] = useState([]);
@@ -25,13 +26,13 @@ const IncomeOverview = ({ darkMode, transactions, onAddIncome }) => {
             Track your income trends and sources over time
           </p>
         </div>
-        <button
+
+        <ActionButton
+          label="Add Income"
           onClick={onAddIncome}
-          className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] font-semibold"
-        >
-          <Plus className="w-5 h-5" />
-          <span>Add Income</span>
-        </button>
+          icon={Plus}
+          color="purple"
+        />
       </div>
 
       <div className="mt-8">

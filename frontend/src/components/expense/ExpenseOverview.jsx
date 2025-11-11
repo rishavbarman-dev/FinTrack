@@ -1,8 +1,9 @@
 import { prepareExpenseLineChartData } from "@/utils/helper";
 import React, { useEffect, useState } from "react";
 import CustomBarChart from "../charts/CustomBarChart";
-import { Plus } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import CustomLineChart from "../charts/CustomLineChart";
+import ActionButton from "../buttons/ActionButton";
 
 const ExpenseOverview = ({ darkMode, transactions, onAddExpense }) => {
   const [chartData, setChartData] = useState([]);
@@ -26,13 +27,12 @@ const ExpenseOverview = ({ darkMode, transactions, onAddExpense }) => {
             Track your expense trends and categories over time
           </p>
         </div>
-        <button
+        <ActionButton
+          label="Add Expense"
           onClick={onAddExpense}
-          className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] font-semibold"
-        >
-          <Plus className="w-7 h-5" />
-          <span>Add Expense</span>
-        </button>
+          icon={Minus}
+          color="purple"
+        />
       </div>
 
       <div className="mt-8">
