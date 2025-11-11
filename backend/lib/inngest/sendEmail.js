@@ -4,6 +4,7 @@ import { render } from "@react-email/render";
 import React from "react";
 import dotenv from "dotenv";
 import emailTemplate from "../../emails/EmailTemplate.js";
+import { generateSpendingInsight } from "../ai/generateSpendingInsight.js";
 
 dotenv.config();
 
@@ -47,6 +48,10 @@ export async function sendMonthlyReportEmail({ to, username, data }) {
       incomes: data.stats?.incomes ?? [],
       insights: data.insights ?? {},
     };
+
+    const aiInsights = await generateSpendingInsight(normalizedData);
+
+    normalizedData.insights.aiInsight = aiInsights;
 
     const emailHtml = await render(
       React.createElement(emailTemplate, {

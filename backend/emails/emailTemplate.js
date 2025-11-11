@@ -94,6 +94,15 @@ export default function emailTemplate({
             Text,
             { style: styles.text },
             `Total Expense: ${data?.insights?.totalExpense ?? 0}, Total Income: ${data?.insights?.totalIncome ?? 0}, Net Savings: ${data?.insights?.netSavings ?? 0}`
+          ),
+          React.createElement(
+            Section,
+            { style: styles.statsContainer },
+            React.createElement(
+              Text,
+              { style: styles.text },
+              `Insights: ${data?.insights?.aiInsight || "No insight available"}`
+            )
           )
         )
       )
