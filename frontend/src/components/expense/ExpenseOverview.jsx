@@ -23,7 +23,7 @@ const ExpenseOverview = ({ darkMode, transactions, onAddExpense }) => {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
             Expense Overview
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-base">
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
             Track your expense trends and categories over time
           </p>
         </div>

@@ -22,7 +22,7 @@ const IncomeOverview = ({ darkMode, transactions, onAddIncome }) => {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
             Income Overview
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-base">
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
             Track your income trends and sources over time
           </p>
         </div>

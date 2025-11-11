@@ -120,7 +120,7 @@ export default function DashboardMain({ darkMode }) {
         <InfoCard
           icon={TrendingUp}
           label="Total Balance"
-          value={currencyFormatter.format(totalBalance)}
+          value={`${currencyFormatter.format(totalBalance)}`}
           color="bg-purple-500"
           darkMode={darkMode}
         />
