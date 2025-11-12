@@ -7,7 +7,7 @@ import UserProvider from "./context/UserContext";
 import Income from "./components/main-content/Income";
 import Expense from "./components/main-content/Expense";
 import DashboardMain from "./components/dashboard/DashboardMain";
-import NotFound from "./components/NotFound";
+import NotFound from "./pages/NotFound";
 import GlobalLoader from "./utils/GlobalLoader";
 import { Toaster } from "react-hot-toast";
 

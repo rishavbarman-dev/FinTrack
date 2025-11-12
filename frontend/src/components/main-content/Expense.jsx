@@ -8,11 +8,12 @@ import Model from "../Model";
 import AddExpenseForm from "../expense/AddExpenseForm";
 import ExpenseList from "../expense/ExpenseList";
 import DeleteAlert from "../DeleteAlert";
+import { useOutletContext } from "react-router-dom";
 
-const Expense = ({ darkMode }) => {
+const Expense = () => {
   useUserAuth();
   const [openAddExpenseModel, setOpenAddExpenseModel] = useState(false);
-
+  const { darkMode } = useOutletContext();
   const [expenseData, setExpenseData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [openDeleteAlert, setOpenDeleteAlert] = useState({
@@ -151,7 +152,7 @@ const Expense = ({ darkMode }) => {
           <AddExpenseForm
             onAddExpense={handleAddExpense}
             initialValues={{}}
-            onCancel={() => setShowAddModal(false)}
+            onCancel={() => setOpenAddExpenseModel(false)}
             darkMode={darkMode}
           />
         </Model>
@@ -166,17 +167,9 @@ const Expense = ({ darkMode }) => {
             darkMode={darkMode}
             content="Are you sure you want to delete expense details?"
             onDelete={() => deleteExpense(openDeleteAlert.data)}
-            onCancel={() => setShowAlert(false)}
+            onCancel={() => setOpenDeleteAlert(false)}
           />
         </Model>
-
-        {/* Export Button */}
-        {/* <div className="mt-8 flex justify-center">
-        <button className="flex items-center space-x-2 px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all shadow-md">
-          <Download className="w-5 h-5" />
-          <span className="font-medium">Export Data</span>
-        </button>
-      </div> */}
       </main>
     </div>
   );
