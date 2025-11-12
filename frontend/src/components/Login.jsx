@@ -10,45 +10,60 @@ import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/utils/apiPaths";
 import { UserContext } from "@/context/UserContext";
+import toast from "react-hot-toast";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
   const { updateUser } = useContext(UserContext);
-
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // API call
+    // Input validation before API call
+    if (!email.trim() || !password.trim()) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+
     try {
+      // Show loading toast
+      const loadingToast = toast.loading("Signing in...");
+
       const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
         email,
         password,
       });
-      // console.log("Login response:", response);
 
       const { token, user } = response.data;
+
       if (token) {
         localStorage.setItem("token", token);
-        updateUser(user); // Update user context
+        updateUser(user);
+
+        toast.dismiss(loadingToast);
+        toast.success(`Welcome back, ${user?.name || "User"}! 🎉`);
         navigate("/dashboard");
+      } else {
+        toast.dismiss(loadingToast);
+        toast.error("Login failed. Please try again.");
       }
     } catch (error) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        setErrorMessage(error.response.data.message);
+      toast.dismiss();
+
+      if (error.response) {
+        if (error.response.status === 401)
+          toast.error("Invalid email or password.");
+        else if (error.response.status === 404)
+          toast.error("Account not found. Please sign up first.");
+        else
+          toast.error(error.response.data?.message || "Something went wrong.");
+      } else if (error.request) {
+        toast.error("Network error. Please check your connection.");
       } else {
-        setErrorMessage("An error occurred during login. Please try again.");
+        toast.error("Unexpected error occurred. Try again later.");
       }
     }
   };
@@ -130,33 +145,19 @@ const Login = () => {
           </div>
 
           <div className="flex justify-end space-x-3">
-            {/* Forgot Password */}
-            <div className="text-right mb-2">
-              <Link
-                to="/forgot-password"
-                className="text-indigo-600 hover:underline text-sm"
-              >
-                Forgot Password?
-              </Link>
-            </div>
-            {/* Signup */}
-            <div className="text-right mb-2">
-              <Link
-                to="/signup"
-                className="text-indigo-600 hover:underline text-sm"
-              >
-                New User!
-              </Link>
-            </div>
+            <Link
+              to="/forgot-password"
+              className="text-indigo-600 hover:underline text-sm"
+            >
+              Forgot Password?
+            </Link>
+            <Link
+              to="/signup"
+              className="text-indigo-600 hover:underline text-sm"
+            >
+              New User!
+            </Link>
           </div>
-
-          {/* Messages */}
-          {errorMessage && (
-            <p className="text-red-600 text-sm mt-2">{errorMessage}</p>
-          )}
-          {successMessage && (
-            <p className="text-green-600 text-sm mt-2">{successMessage}</p>
-          )}
 
           {/* Submit */}
           <button

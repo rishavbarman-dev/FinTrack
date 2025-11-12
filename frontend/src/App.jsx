@@ -21,14 +21,7 @@ const App = () => {
           <Route path="/expense" exact element={<Expense />} />
         </Routes>
 
-        <Toaster
-          toastOptions={{
-            className: "",
-            style: {
-              fontSize: "14px",
-            },
-          }}
-        />
+        <Toaster position="top-right" reverseOrder={false} />
       </UserProvider>
     </>
   );

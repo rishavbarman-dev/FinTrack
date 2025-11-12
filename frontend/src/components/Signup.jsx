@@ -11,25 +11,50 @@ import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "@/context/UserContext";
 import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/utils/apiPaths";
+import toast from "react-hot-toast";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const { updateUser } = useContext(UserContext);
-
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
-    // signup api call
+    // Simple validation
+    if (
+      !firstName.trim() ||
+      !lastName.trim() ||
+      !email.trim() ||
+      !password.trim()
+    ) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error(
+        "Please enter a valid email address (e.g., user@example.com)."
+      );
+      return;
+    }
+
+    // Basic password strength check
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters long.");
+      return;
+    }
+
     try {
+      const loadingToast = toast.loading("Creating your account...");
+
       const response = await axiosInstance.post(API_PATHS.AUTH.SIGNUP, {
         firstName,
         lastName,
@@ -39,20 +64,40 @@ const Signup = () => {
 
       const { token, user } = response.data;
 
+      toast.dismiss(loadingToast);
+
       if (token) {
         localStorage.setItem("token", token);
-        updateUser(user); // Update user context
+        updateUser(user);
+        toast.success(`Welcome aboard, ${user?.firstName || "User"} 🎉`);
         navigate("/dashboard");
+      } else {
+        toast.error("Signup failed. Please try again.");
       }
     } catch (error) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        setErrorMessage(error.response.data.message);
+      toast.dismiss();
+
+      if (error.response) {
+        const { status, data } = error.response;
+
+        // Prefer backend message if it exists
+        const message =
+          data?.message || "Something went wrong. Please try again.";
+
+        // Custom handling based on message
+        if (message.toLowerCase().includes("email already")) {
+          toast.error("Email already registered. Try logging in.");
+        } else if (status === 400) {
+          toast.error(message);
+        } else if (status === 409) {
+          toast.error("Email already registered. Try logging in.");
+        } else {
+          toast.error(message);
+        }
+      } else if (error.request) {
+        toast.error("Network error. Please check your connection.");
       } else {
-        setErrorMessage("An error occurred during Signup. Please try again.");
+        toast.error("Unexpected error occurred. Try again later.");
       }
     }
   };
@@ -67,7 +112,7 @@ const Signup = () => {
         }}
       >
         <form
-          onSubmit={handleLogin}
+          onSubmit={handleSignup}
           className="w-full max-w-md space-y-6 bg-transparent"
         >
           <h1 className="text-[2.9rem] font-bold text-left mb-2 bg-gradient-to-r from-gray-300 via-purple-500 to-indigo-600 bg-clip-text text-transparent">
@@ -179,41 +224,28 @@ const Signup = () => {
             </button>
           </div>
 
+          {/* Links */}
           <div className="flex justify-end space-x-3">
-            {/* Forgot Password */}
-            <div className="text-right mb-2">
-              <Link
-                to="/forgot-password"
-                className="text-indigo-600 hover:underline text-sm"
-              >
-                Forgot Password?
-              </Link>
-            </div>
-            {/* Login */}
-            <div className="text-right mb-2">
-              <Link
-                to="/login"
-                className="text-indigo-600 hover:underline text-sm"
-              >
-                Already have an account?
-              </Link>
-            </div>
+            <Link
+              to="/forgot-password"
+              className="text-indigo-600 hover:underline text-sm"
+            >
+              Forgot Password?
+            </Link>
+            <Link
+              to="/login"
+              className="text-indigo-600 hover:underline text-sm"
+            >
+              Already have an account?
+            </Link>
           </div>
-
-          {/* Messages */}
-          {errorMessage && (
-            <p className="text-red-600 text-sm mt-2">{errorMessage}</p>
-          )}
-          {successMessage && (
-            <p className="text-green-600 text-sm mt-2">{successMessage}</p>
-          )}
 
           {/* Submit */}
           <button
             type="submit"
             className="flex items-center justify-center w-40 py-3 rounded-md text-lg font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-500 hover:from-purple-500 hover:to-indigo-600 transition"
           >
-            <img src={loginIcon} alt="Login" className="w-5 h-5 mr-2" />
+            <img src={loginIcon} alt="Signup" className="w-5 h-5 mr-2" />
             <span>Signup</span>
           </button>
         </form>
@@ -223,7 +255,7 @@ const Signup = () => {
       <div className="flex flex-1 justify-center items-center h-1/3 lg:h-full p-6 md:p-10 lg:p-12 bg-gradient-to-r from-white via-purple-400 to-indigo-600">
         <img
           src={loginCardImage}
-          alt="Login Card"
+          alt="Signup Card"
           className="max-w-[70%] max-h-[70%] rounded-lg object-cover"
         />
       </div>
