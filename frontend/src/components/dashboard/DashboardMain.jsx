@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  CreditCard,
-  DollarSign,
-  Download,
-  Percent,
-  TrendingUp,
-} from "lucide-react";
+import { CreditCard, DollarSign, Percent, TrendingUp } from "lucide-react";
 import { useUserAuth } from "@/hooks/useUserAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { API_PATHS } from "@/utils/apiPaths";
 import axiosInstance from "@/utils/axiosInstance";
 import InfoCard from "../card/InfoCard";
@@ -20,21 +13,11 @@ import RecentIncomeWithChart from "./RecentIncomeWithChart";
 import RecentIncomes from "./RecentIncomes";
 import BudgetProgress from "./BudgetProgress";
 
-export default function DashboardMain({ darkMode }) {
-  // fallback demo categories (used if API doesn't return categories)
-  // const fallbackCategories = [
-  //   { name: "Food", color: "bg-red-400", value: 1000 },
-  //   { name: "Transportation", color: "bg-blue-400", value: 200 },
-  //   { name: "Housing", color: "bg-yellow-400", value: 3000 },
-  //   { name: "Entertainment", color: "bg-gray-400", value: 300 },
-  //   { name: "Shopping", color: "bg-purple-500", value: 0 },
-  //   { name: "Test", color: "bg-sky-400", value: 0 },
-  // ];
-
+export default function DashboardMain() {
   useUserAuth();
 
   const navigate = useNavigate();
-
+  const { darkMode } = useOutletContext();
   const [dashboardData, setDashboardData] = useState(null);
   const [budgetData, setBudgetData] = useState();
   const [loading, setLoading] = useState(false);
@@ -94,13 +77,6 @@ export default function DashboardMain({ darkMode }) {
       ? Math.round(((totalIncome - totalExpense) / totalIncome) * 100)
       : 0;
 
-  // categories from API if provided else fallback
-  // const categories = dashboardData?.categories ?? fallbackCategories;
-  // const maxCategoryValue = Math.max(
-  //   1,
-  //   ...categories.map((c) => Math.abs(Number(c.value ?? 0)))
-  // );
-
   const currencyFormatter = new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
@@ -155,7 +131,7 @@ export default function DashboardMain({ darkMode }) {
         <RecentTransactions
           darkMode={darkMode}
           transaction={dashboardData?.recentTransactions || []}
-          onSeeMore={() => navigate("/expense")}
+          onSeeMore={() => navigate("/dashboard/expense")}
         />
 
         <FinancialOverview
@@ -168,7 +144,7 @@ export default function DashboardMain({ darkMode }) {
         <ExpenseTransactions
           darkMode={darkMode}
           transaction={dashboardData?.last30DaysExpenses?.transactions || []}
-          onSeeMore={() => navigate("/expense")}
+          onSeeMore={() => navigate("/dashboard/expense")}
         />
 
         <Last30DaysExpenses
@@ -187,17 +163,9 @@ export default function DashboardMain({ darkMode }) {
         <RecentIncomes
           darkMode={darkMode}
           transaction={dashboardData?.last60DaysIncomes?.transactions || []}
-          onSeeMore={() => navigate("/income")}
+          onSeeMore={() => navigate("/dashboard/income")}
         />
       </div>
-
-      {/* Export Button */}
-      {/* <div className="mt-8 flex justify-center">
-        <button className="flex items-center space-x-2 px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all shadow-md">
-          <Download className="w-5 h-5" />
-          <span className="font-medium">Export Data</span>
-        </button>
-      </div> */}
     </main>
   );
 }

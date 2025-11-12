@@ -3,9 +3,11 @@ import { Plus } from "lucide-react";
 import { prepareIncomeBarChartData } from "@/utils/helper";
 import CustomBarChart from "../charts/CustomBarChart";
 import ActionButton from "../buttons/ActionButton";
+import { useOutletContext } from "react-router-dom";
 
-const IncomeOverview = ({ darkMode, transactions, onAddIncome }) => {
+const IncomeOverview = ({ transactions, onAddIncome }) => {
   const [chartData, setChartData] = useState([]);
+  const { darkMode } = useOutletContext();
 
   useEffect(() => {
     const result = prepareIncomeBarChartData(transactions);

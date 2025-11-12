@@ -1,8 +1,10 @@
 import React from "react";
 import TransactionInfoCard from "../card/TransactionInfoCard";
 import { Download, IndianRupee } from "lucide-react";
+import { useOutletContext } from "react-router-dom";
 
-const ExpenseList = ({ transactions, onDelete, onDownload, darkMode }) => {
+const ExpenseList = ({ transactions, onDelete, onDownload }) => {
+  const { darkMode } = useOutletContext();
   // --- Dynamic styles ---
   const containerClasses = `
     rounded-2xl shadow-lg border overflow-hidden
@@ -65,7 +67,6 @@ const ExpenseList = ({ transactions, onDelete, onDownload, darkMode }) => {
               date={expense.date}
               amount={expense.amount}
               type="expense"
-              darkMode={darkMode}
               onDelete={() => onDelete(expense._id)}
             />
           ))

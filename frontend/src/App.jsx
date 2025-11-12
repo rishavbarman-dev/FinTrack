@@ -7,6 +7,7 @@ import UserProvider from "./context/UserContext";
 import Income from "./components/main-content/Income";
 import { Toaster } from "react-hot-toast";
 import Expense from "./components/main-content/Expense";
+import DashboardMain from "./components/dashboard/DashboardMain";
 
 const App = () => {
   return (
@@ -16,9 +17,11 @@ const App = () => {
           <Route path="/" element={<Root />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/income" exact element={<Income />} />
-          <Route path="/expense" exact element={<Expense />} />
+          <Route path="/dashboard" element={<Dashboard />}>
+            <Route index element={<DashboardMain />} />
+            <Route path="income" element={<Income />} />
+            <Route path="expense" element={<Expense />} />
+          </Route>
         </Routes>
 
         <Toaster position="top-right" reverseOrder={false} />

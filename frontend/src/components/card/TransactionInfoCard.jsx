@@ -1,5 +1,6 @@
 import React from "react";
 import { Trash2, TrendingDown, TrendingUp, Utensils } from "lucide-react";
+import { useOutletContext } from "react-router-dom";
 
 export default function TransactionInfoCard({
   title,
@@ -9,8 +10,8 @@ export default function TransactionInfoCard({
   type = "",
   hideDeleteBtn = false,
   onDelete,
-  darkMode = false,
 }) {
+  const { darkMode } = useOutletContext();
   const parsedDate = date ? new Date(date) : null;
   const dateLabel = parsedDate
     ? parsedDate.toLocaleDateString(undefined, {
@@ -80,7 +81,10 @@ export default function TransactionInfoCard({
           />
           {!hideDeleteBtn && (
             <button
-              onClick={onDelete}
+              onClick={(e) => {
+                e.stopPropagation(); // ✅ Prevent parent click
+                onDelete && onDelete();
+              }}
               className="p-2 rounded-md text-red-600 hover:text-red-800 transition"
               aria-label="Delete transaction"
               title="Delete"

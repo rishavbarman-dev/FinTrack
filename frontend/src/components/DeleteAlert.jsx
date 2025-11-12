@@ -1,6 +1,8 @@
 import React from "react";
+import { useOutletContext } from "react-router-dom";
 
-const DeleteAlert = ({ content, onDelete, onCancel, darkMode }) => {
+const DeleteAlert = ({ content, onDelete, onCancel }) => {
+  const { darkMode } = useOutletContext();
   // --- Dynamic classes ---
   const containerClasses = `
     w-full max-w-md mx-auto rounded-md shadow-lg border p-4 transition-colors

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import TransactionButton from "../buttons/TransactionButton";
+import { useOutletContext } from "react-router-dom";
 
 export default function AddIncomeForm({
   initialValues = { source: "", amount: "", date: "" },
-  darkMode = false,
   onAddIncome,
 }) {
   const [income, setIncome] = useState({ ...initialValues });
+  const { darkMode } = useOutletContext();
 
   useEffect(() => {
     if (!income.date) {

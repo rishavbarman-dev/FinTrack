@@ -1,12 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import DashboardMain from "./DashboardMain";
 import {
   Home,
-  ArrowLeftRight,
-  PieChart,
   TrendingUp,
-  Target,
-  Download,
   Moon,
   Sun,
   User,
@@ -14,17 +9,29 @@ import {
   Receipt,
 } from "lucide-react";
 import logo from "../../assets/images/logo.png";
-import Transactions from "../main-content/Transactions";
 import { UserContext } from "@/context/UserContext";
-import { useNavigate } from "react-router-dom";
-import Income from "../main-content/Income";
-import Expense from "../main-content/Expense";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const menuItems = [
-  { id: "dashboard", label: "Dashboard", icon: Home },
-  { id: "income", label: "Income", icon: TrendingUp },
-  { id: "expense", label: "Expense", icon: TrendingDown },
-  { id: "reports", label: "Reports", icon: Receipt },
+  { id: "dashboard", label: "Dashboard", icon: Home, path: "/dashboard" },
+  {
+    id: "income",
+    label: "Income",
+    icon: TrendingUp,
+    path: "/dashboard/income",
+  },
+  {
+    id: "expense",
+    label: "Expense",
+    icon: TrendingDown,
+    path: "/dashboard/expense",
+  },
+  {
+    id: "reports",
+    label: "Reports",
+    icon: Receipt,
+    path: "/dashboard/reports",
+  },
 ];
 
 const Dashboard = () => {
@@ -53,27 +60,6 @@ const Dashboard = () => {
     navigate("/login");
   };
 
-  const renderContent = () => {
-    switch (activeItem) {
-      case "dashboard":
-        return <DashboardMain darkMode={darkMode} />;
-      case "income":
-        return <Income darkMode={darkMode} />;
-      case "expense":
-        return <Expense darkMode={darkMode} />;
-      case "reports":
-        return <div className="p-8">Reports Content</div>;
-      // case "goals":
-      //   return <div className="p-8">Savings Goals Content</div>;
-      // case "profile":
-      //   return <div className="p-8">Profile Content</div>;
-      // case "settings":
-      //   return <div className="p-8">Settings Content</div>;
-      default:
-        return <DashboardMain darkMode={darkMode} />;
-    }
-  };
-
   return (
     <div
       className={`min-h-screen ${
@@ -82,9 +68,9 @@ const Dashboard = () => {
     >
       {/* Header */}
       <header
-        className={`${
+        className={`fixed top-0 left-0 w-full z-50 ${
           darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
-        } border-b sticky top-0 z-50`}
+        } border-b`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -188,7 +174,7 @@ const Dashboard = () => {
 
       {/* Navigation */}
       <nav
-        className={`${
+        className={`fixed top-16 left-0 w-full z-40 ${
           darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
         } border-b`}
       >
@@ -199,7 +185,10 @@ const Dashboard = () => {
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActiveItem(item.id)}
+                  onClick={() => {
+                    setActiveItem(item.id);
+                    navigate(item.path);
+                  }}
                   className={`flex items-center space-x-2 px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
                     activeItem === item.id
                       ? "bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-lg"
@@ -218,7 +207,9 @@ const Dashboard = () => {
       </nav>
 
       {/* Main Content */}
-      {renderContent()}
+      <div className="pt-32">
+        <Outlet context={{ darkMode }} />
+      </div>
     </div>
   );
 };

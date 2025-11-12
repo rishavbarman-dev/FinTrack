@@ -3,9 +3,11 @@ import { prepareExpenseLineChartData } from "@/utils/helper";
 import CustomLineChart from "../charts/CustomLineChart";
 import ActionButton from "../buttons/ActionButton";
 import { Minus } from "lucide-react";
+import { useOutletContext } from "react-router-dom";
 
-const ExpenseOverview = ({ darkMode, transactions, onAddExpense }) => {
+const ExpenseOverview = ({ transactions, onAddExpense }) => {
   const [chartData, setChartData] = useState([]);
+  const { darkMode } = useOutletContext();
 
   useEffect(() => {
     const result = prepareExpenseLineChartData(transactions);
