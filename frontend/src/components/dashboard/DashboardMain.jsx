@@ -111,6 +111,7 @@ export default function DashboardMain({ darkMode }) {
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Budget Process */}
       <BudgetProgress
+        darkMode={darkMode}
         initialBudget={{ amount: budgetData?.budget }}
         currentExpense={dashboardData?.totalExpense}
       />

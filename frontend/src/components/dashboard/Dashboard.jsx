@@ -204,8 +204,8 @@ const Dashboard = () => {
                     activeItem === item.id
                       ? "bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-lg"
                       : darkMode
-                      ? "text-gray-300 hover:bg-gray-700"
-                      : "text-gray-600 hover:bg-gray-100"
+                        ? "text-gray-300 hover:bg-gray-700"
+                        : "text-gray-600 hover:bg-gray-100"
                   }`}
                 >
                   <Icon className="w-4 h-4" />

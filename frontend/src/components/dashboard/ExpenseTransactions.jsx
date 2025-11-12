@@ -10,8 +10,8 @@ const ExpenseTransactions = ({
   const list = Array.isArray(transactions)
     ? transactions
     : Array.isArray(transaction)
-    ? transaction
-    : [];
+      ? transaction
+      : [];
 
   console.log("ExpenseTransactions list:", transactions);
 
@@ -25,13 +25,21 @@ const ExpenseTransactions = ({
         <h5 className="text-lg font-semibold">Expenses</h5>
         <button
           onClick={() => onSeeMore && onSeeMore()}
-          className="text-sm text-indigo-600 hover:underline"
+          className={`text-sm font-medium hover:underline ${
+            darkMode
+              ? "text-indigo-400 hover:text-indigo-300"
+              : "text-indigo-600"
+          }`}
         >
           See All
         </button>
       </div>
 
-      <div>
+      <div
+        className={`${
+          darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+        }`}
+      >
         {list?.slice(0, 5).map((expense) => (
           <TransactionInfoCard
             key={expense._id}
@@ -41,6 +49,7 @@ const ExpenseTransactions = ({
             amount={expense.amount}
             type="expense"
             hideDeleteBtn={true}
+            darkMode={darkMode}
           />
         ))}
       </div>

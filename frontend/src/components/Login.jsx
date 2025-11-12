@@ -7,7 +7,6 @@ import eyeOffIcon from "../assets/images/password_hide.png";
 import loginIcon from "../assets/images/login_icon_white.png";
 import waveBackground from "../assets/images/background_left_login.png";
 import { Link, useNavigate } from "react-router-dom";
-import demoUser from "../data/Users";
 import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/utils/apiPaths";
 import { UserContext } from "@/context/UserContext";
@@ -26,24 +25,6 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    // Temporary success message for demonstration
-    // const user = demoUser.find(
-    //   (u) =>
-    //     (u.username === username || u.email === email) &&
-    //     u.password === password
-    // );
-    // console.log(user);
-    // if (user) {
-    //   setSuccessMessage("Login successful!");
-    //   setErrorMessage("");
-    //   setTimeout(() => {
-    //     navigate("/dashboard"); // Redirect to dashboard
-    //   }, 1000);
-    // } else {
-    //   setErrorMessage("Invalid username or password.");
-    //   setSuccessMessage("");
-    // }
 
     // API call
     try {

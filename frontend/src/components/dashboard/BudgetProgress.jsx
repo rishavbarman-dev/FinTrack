@@ -18,6 +18,7 @@ export default function BudgetProgress({
   initialBudget,
   currentExpense,
   onBudgetUpdate,
+  darkMode,
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [newBudget, setNewBudget] = useState(
@@ -28,7 +29,6 @@ export default function BudgetProgress({
     ? (currentExpense / initialBudget.amount) * 100
     : 0;
 
-  // Handle update budget
   const handleUpdateBudget = async () => {
     const parsedBudget = parseFloat(newBudget);
 
@@ -43,8 +43,6 @@ export default function BudgetProgress({
       });
 
       toast.success(response.data?.message || "Budget updated successfully.");
-
-      // Update parent or local UI
       onBudgetUpdate?.(response.data?.budget);
       setIsEditing(false);
     } catch (error) {
@@ -61,11 +59,9 @@ export default function BudgetProgress({
     setIsEditing(false);
   };
 
-  //  Update progress bar
   useEffect(() => {
     if (!initialBudget?.amount || initialBudget.amount <= 0) return;
 
-    // Toast notifications based on spending progress
     if (percentUsed >= 100) {
       toast.error(
         `Budget exceeded! You've spent more than ₹${initialBudget.amount.toLocaleString()}.`
@@ -83,45 +79,72 @@ export default function BudgetProgress({
   }, [initialBudget, currentExpense, percentUsed]);
 
   return (
-    <Card className="mb-8 shadow-md border border-gray-200 dark:border-gray-700">
+    <Card
+      className={`mb-8 shadow-md border transition-colors ${
+        darkMode
+          ? "bg-gray-800 border-gray-700 text-gray-100"
+          : "bg-white border-gray-200 text-gray-900"
+      }`}
+    >
       <CardHeader>
         <div className="flex justify-between items-center">
           <CardTitle className="text-lg font-semibold">
             Monthly Budget Progress
           </CardTitle>
+
           {isEditing ? (
             <div className="flex items-center gap-2">
               <Input
                 type="number"
                 value={newBudget}
                 onChange={(e) => setNewBudget(e.target.value)}
-                className="w-32"
+                className={`w-32 border ${
+                  darkMode
+                    ? "bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400"
+                    : "bg-gray-50 border-gray-300 text-gray-900"
+                }`}
                 placeholder="Enter amount"
                 autoFocus
               />
-              <Button variant="ghost" size="icon" onClick={handleUpdateBudget}>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleUpdateBudget}
+                className={darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"}
+              >
                 <Check className="h-4 w-4 text-green-500" />
               </Button>
-              <Button variant="ghost" size="icon" onClick={handleCancel}>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleCancel}
+                className={darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"}
+              >
                 <X className="h-4 w-4 text-red-500" />
               </Button>
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <CardDescription>
+              <CardDescription
+                className={darkMode ? "text-gray-400" : "text-gray-600"}
+              >
                 {typeof initialBudget?.amount === "number"
-                  ? `${
-                      currentExpense?.toFixed?.(2) ?? "0.00"
-                    } of ₹${initialBudget.amount.toFixed(2)} spent`
+                  ? `${currentExpense?.toFixed?.(2) ?? "0.00"} of ₹${initialBudget.amount.toFixed(2)} spent`
                   : "No budget set yet. Please set one to start tracking your expenses."}
               </CardDescription>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsEditing(true)}
-                className="h-6 w-6"
+                className={`h-6 w-6 ${
+                  darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
+                }`}
               >
-                <Pencil className="h-4 w-4" />
+                <Pencil
+                  className={`h-4 w-4 ${
+                    darkMode ? "text-gray-300" : "text-gray-600"
+                  }`}
+                />
               </Button>
             </div>
           )}
@@ -137,16 +160,21 @@ export default function BudgetProgress({
                 percentUsed >= 90
                   ? "bg-red-500"
                   : percentUsed >= 75
-                  ? "bg-yellow-500"
-                  : "bg-green-500"
+                    ? "bg-yellow-500"
+                    : "bg-green-500"
               }`}
+              className={darkMode ? "bg-gray-700" : "bg-gray-200"}
             />
-            <p className="text-xs text-muted-foreground text-right">
+            <p
+              className={`text-xs text-right ${
+                darkMode ? "text-gray-400" : "text-gray-600"
+              }`}
+            >
               {percentUsed.toFixed(1)}% used
             </p>
           </div>
         ) : (
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className={darkMode ? "text-gray-400" : "text-gray-500"}>
             No budget set yet. Please set one to start tracking your expenses.
           </p>
         )}

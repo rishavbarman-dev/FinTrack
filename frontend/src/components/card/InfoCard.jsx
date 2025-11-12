@@ -43,11 +43,7 @@ export default function InfoCard({
 
       {/* Value */}
       <CardContent>
-        <div
-          className={`text-3xl font-bold ${
-            darkMode ? "text-white" : "text-cyan-500"
-          } ${textColor}`}
-        >
+        <div className={`text-3xl font-bold text-cyan-500 ${textColor}`}>
           {value}
         </div>
       </CardContent>

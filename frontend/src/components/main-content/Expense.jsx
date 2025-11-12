@@ -133,6 +133,7 @@ const Expense = ({ darkMode }) => {
           />
 
           <ExpenseList
+            darkMode={darkMode}
             transactions={expenseData}
             onDelete={(id) => {
               setOpenDeleteAlert({ show: true, data: id });
@@ -156,11 +157,13 @@ const Expense = ({ darkMode }) => {
         </Model>
 
         <Model
+          darkMode={darkMode}
           isOpen={openDeleteAlert.show}
           onClose={() => setOpenDeleteAlert({ show: false, data: null })}
           title="Delete Expense"
         >
           <DeleteAlert
+            darkMode={darkMode}
             content="Are you sure you want to delete expense details?"
             onDelete={() => deleteExpense(openDeleteAlert.data)}
             onCancel={() => setShowAlert(false)}
