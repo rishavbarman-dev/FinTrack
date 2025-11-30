@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { CreditCard, DollarSign, Percent, TrendingUp } from "lucide-react";
 import { useUserAuth } from "@/hooks/useUserAuth";
@@ -90,6 +91,7 @@ export default function DashboardMain() {
         darkMode={darkMode}
         initialBudget={{ amount: budgetData?.budget }}
         currentExpense={dashboardData?.totalExpense}
+        onBudgetUpdate={fetchBudgetData}
       />
 
       {/* Stats Cards */}
