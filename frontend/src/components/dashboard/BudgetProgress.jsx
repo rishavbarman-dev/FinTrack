@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -24,7 +24,8 @@ export default function BudgetProgress({
   const [newBudget, setNewBudget] = useState(
     initialBudget?.amount?.toString() || ""
   );
-
+  const prevExpense = useRef(currentExpense);
+  const prevBudget = useRef(initialBudget?.amount);
   const percentUsed = initialBudget
     ? (currentExpense / initialBudget.amount) * 100
     : 0;
@@ -61,7 +62,14 @@ export default function BudgetProgress({
 
   useEffect(() => {
     if (!initialBudget?.amount || initialBudget.amount <= 0) return;
+    // only run if expense or budget changed
+      if (
+        prevExpense.current === currentExpense &&
+        prevBudget.current === initialBudget.amount
+      ) return;
 
+      prevExpense.current = currentExpense;
+      prevBudget.current = initialBudget.amount;
     if (percentUsed >= 100) {
       toast.error(
         `Budget exceeded! You've spent more than ₹${initialBudget.amount.toLocaleString()}.`

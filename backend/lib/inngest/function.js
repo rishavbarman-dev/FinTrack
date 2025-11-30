@@ -8,8 +8,8 @@ import { sendBudgetAlertEmail, sendMonthlyReportEmail } from "./sendEmail.js";
 
 export const checkBudgetAlert = inngest.createFunction(
   { id: "check-budget-alert", name: "Check Budget Alert" },
-  { cron: "0 */6 * * *" }, // for every 6 hours
-  // { cron: "*/1 * * * *" }, // for 1 min
+  // { cron: "0 */6 * * *" }, // for every 6 hours
+  { cron: "*/1 * * * *" }, // for 1 min
   async ({ step }) => {
     const budgets = await step.run("fetch-all-budgets", async () => {
       return await Budget.find().populate("userId", "email");

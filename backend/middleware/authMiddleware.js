@@ -11,6 +11,8 @@ export const protect = async (req, res, next) => {
   try {
     // eslint-disable-next-line no-undef
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(decoded);
+
     req.user = await User.findById(decoded.id).select("-password");
     next();
     // eslint-disable-next-line no-unused-vars
