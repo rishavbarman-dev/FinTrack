@@ -9,6 +9,7 @@
     "client": "npm run dev --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "email": "email dev",
+    "data:import": "node backend/seeder.js",
     "data:destroy": "node backend/seeder.js -d"
   },
   "repository": {
