@@ -8,7 +8,8 @@
     "server": "nodemon backend/server",
     "client": "npm run dev --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "email": "email dev"
+    "email": "email dev",
+    "data:destroy": "node backend/seeder.js -d"
   },
   "repository": {
     "type": "git",
