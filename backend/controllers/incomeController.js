@@ -1,5 +1,8 @@
+/* eslint-disable no-undef */
 import xlsx from "xlsx";
 import Income from "../models/Income.js";
+import path from "path";
+import fs from "fs";
 
 export const addIncome = async (req, res) => {
   const userId = req.user.id;
@@ -57,6 +60,7 @@ export const downloadIncomeExcel = async (req, res) => {
 
     const data = income.map((item) => ({
       Source: item.source,
+      Description: item.description,
       Amount: item.amount,
       Date: item.date.toISOString().split("T")[0],
     }));
@@ -65,9 +69,21 @@ export const downloadIncomeExcel = async (req, res) => {
     const ws = xlsx.utils.json_to_sheet(data);
     xlsx.utils.book_append_sheet(wb, ws, "Incomes");
 
-    const filePath = "Incomes.xlsx";
+    // Create & define download folder path
+    const downloadDir = path.join(process.cwd(), "downloads");
+
+    // Create folder if doesn't exist
+    if (!fs.existsSync(downloadDir)) {
+      fs.mkdirSync(downloadDir);
+    }
+
+    const filePath = path.join(downloadDir, `Incomes-${Date.now()}.xlsx`);
+
+    // Save file to that folder
     xlsx.writeFile(wb, filePath);
-    res.download(filePath);
+
+    // Send file to frontend for downloading
+    return res.download(filePath);
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
