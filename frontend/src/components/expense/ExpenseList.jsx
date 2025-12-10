@@ -75,6 +75,7 @@ const ExpenseList = ({ transactions, onDelete, onDownload }) => {
             <TransactionInfoCard
               key={expense._id}
               title={expense.category}
+              description={expense.description}
               icon={expense.icon}
               date={expense.date}
               amount={expense.amount}

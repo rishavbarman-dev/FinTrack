@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import CustomPieChart from "../charts/CustomPieChart";
 
-const COLORS = ["#E06B80", "#1c64f2", "#14b8a6", "#875ce5", "#8CE4FF"];
+const COLORS = [
+  "#E06B80",
+  "#1c64f2",
+  "#14b8a6",
+  "#875ce5",
+  "#8CE4FF",
+  "#F4C542",
+];
 
 const RecentIncomeWithChart = ({ darkMode = false, data, totalIncome = 0 }) => {
   const [chartData, setChartData] = useState([]);

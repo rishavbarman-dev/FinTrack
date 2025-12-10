@@ -77,6 +77,7 @@ const IncomeList = ({ transactions, onDelete, onDownload }) => {
             <TransactionInfoCard
               key={income._id}
               title={income.source}
+              description={income.description}
               icon={income.icon}
               date={income.date}
               amount={income.amount}
