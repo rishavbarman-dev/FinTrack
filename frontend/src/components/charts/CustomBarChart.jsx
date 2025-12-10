@@ -77,7 +77,7 @@ const CustomBarChart = ({ data = [], darkMode = false, xKey = "category" }) => {
             axisLine={false}
             tickLine={false}
           />
-          <Tooltip content={<MyTooltip />} />
+          <Tooltip content={MyTooltip} />
           <Bar dataKey="amount" radius={[10, 10, 0, 0]}>
             {data.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={getBarColor(index)} />

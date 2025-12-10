@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import TransactionInfoCard from "../card/TransactionInfoCard";
 import { Download, IndianRupee } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
+import Pagination from "../Pagination";
 
 const IncomeList = ({ transactions, onDelete, onDownload }) => {
   const { darkMode } = useOutletContext();
+
+  // ---------------- Pagination Hooks ----------------
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(transactions.length / itemsPerPage);
+
+  const paginatedData = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return transactions.slice(start, start + itemsPerPage);
+  }, [transactions, currentPage]);
+
   // === Dynamic Styles ===
   const containerClasses = `
     rounded-2xl shadow-lg border overflow-hidden
@@ -60,8 +72,8 @@ const IncomeList = ({ transactions, onDelete, onDownload }) => {
 
       {/* ===== List / Empty State ===== */}
       <div className="p-6 space-y-3">
-        {transactions?.length > 0 ? (
-          transactions.map((income) => (
+        {paginatedData?.length > 0 ? (
+          paginatedData.map((income) => (
             <TransactionInfoCard
               key={income._id}
               title={income.source}
@@ -86,6 +98,15 @@ const IncomeList = ({ transactions, onDelete, onDownload }) => {
           </div>
         )}
       </div>
+
+      {transactions.length > itemsPerPage && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          darkMode={darkMode}
+        />
+      )}
     </div>
   );
 };
