@@ -46,7 +46,7 @@ const Income = () => {
 
   //   Handle Add Income
   const handleAddIncome = async (income) => {
-    const { source, amount, date } = income;
+    const { source, description, amount, date } = income;
 
     // Validation checks
     if (!source || !String(source).trim()) {
@@ -62,6 +62,7 @@ const Income = () => {
     try {
       await axiosInstance.post(API_PATHS.INCOME.ADD_INCOME, {
         source,
+        description,
         amount,
         date,
       });

@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import TransactionButton from "../buttons/TransactionButton";
 import { useOutletContext } from "react-router-dom";
+import { Select } from "../ui/select";
 
 export default function AddIncomeForm({
-  initialValues = { source: "", amount: "", date: "" },
+  initialValues = { source: "", amount: "", description: "", date: "" },
   onAddIncome,
 }) {
   const [income, setIncome] = useState({ ...initialValues });
@@ -26,32 +27,68 @@ export default function AddIncomeForm({
 
   return (
     <div className="space-y-4">
-      <Input
-        label="Source"
-        value={income.source}
-        onChange={handleChange("source")}
-        placeholder="Salary, Freelance, etc."
-        darkMode={darkMode}
-      />
+      {/* Source */}
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          Source
+        </label>
+        <Select
+          label="Source"
+          options={[
+            "Salary",
+            "Bonus",
+            "Freelance",
+            "Business",
+            "Investment",
+            "Miscellaneous",
+          ]}
+          value={income.source}
+          onChange={handleChange("source")}
+          placeholder="Select Income Source"
+          darkMode={darkMode}
+        />
+      </div>
 
-      <Input
-        label="Amount"
-        type="number"
-        step="0.01"
-        value={income.amount}
-        onChange={handleChange("amount")}
-        placeholder="0.00"
-        darkMode={darkMode}
-      />
+      {/* Description */}
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          Description
+        </label>
+        <Input
+          value={income.description || ""}
+          onChange={handleChange("description")}
+          placeholder="Enter description"
+          darkMode={darkMode}
+        />
+      </div>
 
-      <Input
-        label="Date"
-        type="date"
-        value={income.date}
-        onChange={handleChange("date")}
-        placeholder="dd/mm/yyyy"
-        darkMode={darkMode}
-      />
+      {/* Amount */}
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          Amount
+        </label>
+        <Input
+          type="number"
+          step="0.01"
+          value={income.amount}
+          onChange={handleChange("amount")}
+          placeholder="0.00"
+          darkMode={darkMode}
+        />
+      </div>
+
+      {/* Date */}
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          Date
+        </label>
+        <Input
+          type="date"
+          value={income.date}
+          onChange={handleChange("date")}
+          darkMode={darkMode}
+        />
+      </div>
 
       <TransactionButton
         label="Add Income"

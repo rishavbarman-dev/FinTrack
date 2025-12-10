@@ -150,12 +150,12 @@ const Login = () => {
             </div>
 
             <div className="flex justify-end space-x-3">
-              <Link
+              {/* <Link
                 to="/forgot-password"
                 className="text-indigo-600 hover:underline text-sm"
               >
                 Forgot Password?
-              </Link>
+              </Link> */}
               <Link
                 to="/signup"
                 className="text-indigo-600 hover:underline text-sm"

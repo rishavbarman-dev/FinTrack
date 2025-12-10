@@ -5,7 +5,7 @@ export const addExpense = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const { category, amount, date } = req.body;
+    const { category, description, amount, date } = req.body;
 
     if (!category || !amount || !date) {
       return res
@@ -16,6 +16,7 @@ export const addExpense = async (req, res) => {
     const newExpense = new Expense({
       userId,
       category,
+      description,
       amount,
       date: new Date(date),
     });

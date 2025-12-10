@@ -26,12 +26,12 @@ const menuItems = [
     icon: TrendingDown,
     path: "/dashboard/expense",
   },
-  {
-    id: "reports",
-    label: "Reports",
-    icon: Receipt,
-    path: "/dashboard/reports",
-  },
+  // {
+  //   id: "reports",
+  //   label: "Reports",
+  //   icon: Receipt,
+  //   path: "/dashboard/reports",
+  // },
 ];
 
 const Dashboard = () => {

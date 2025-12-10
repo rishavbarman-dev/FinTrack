@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import TransactionButton from "../buttons/TransactionButton";
+import { Select } from "../ui/select";
 
 export default function AddExpenseForm({
   initialValues = { category: "", amount: "", date: "" },
@@ -28,32 +29,74 @@ export default function AddExpenseForm({
 
   return (
     <div className="space-y-4">
-      <Input
-        label="Category"
-        value={expense.source}
-        onChange={handleChange("category")}
-        placeholder="Rent, Groceries, etc."
-        darkMode={darkMode}
-      />
+      {/* Category */}
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          Category
+        </label>
 
-      <Input
-        label="Amount"
-        type="number"
-        step="0.01"
-        value={expense.amount}
-        onChange={handleChange("amount")}
-        placeholder="0.00"
-        darkMode={darkMode}
-      />
+        <Select
+          label="Category"
+          options={[
+            "Rent",
+            "Food & Groceries",
+            "Transportation",
+            "Health & Wellness",
+            "Shopping & Personal Care",
+            "Miscellaneous",
+          ]}
+          value={expense.source}
+          onChange={handleChange("category")}
+          placeholder="Select Expense Source"
+          darkMode={darkMode}
+        />
+      </div>
 
-      <Input
-        label="Date"
-        type="date"
-        value={expense.date}
-        onChange={handleChange("date")}
-        placeholder="dd/mm/yyyy"
-        darkMode={darkMode}
-      />
+      {/* Description */}
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          Description
+        </label>
+        <Input
+          value={expense.description || ""}
+          onChange={(e) =>
+            setExpense((s) => ({ ...s, description: e.target.value }))
+          }
+          placeholder="Enter description"
+          darkMode={darkMode}
+        />
+      </div>
+
+      {/* Amount */}
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          Amount
+        </label>
+        <Input
+          label="Amount"
+          type="number"
+          step="0.01"
+          value={expense.amount}
+          onChange={handleChange("amount")}
+          placeholder="0.00"
+          darkMode={darkMode}
+        />
+      </div>
+
+      {/* Date */}
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          Date
+        </label>
+        <Input
+          label="Date"
+          type="date"
+          value={expense.date}
+          onChange={handleChange("date")}
+          placeholder="dd/mm/yyyy"
+          darkMode={darkMode}
+        />
+      </div>
 
       <TransactionButton
         label="Add Expense"

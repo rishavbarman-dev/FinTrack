@@ -232,12 +232,6 @@ const Signup = () => {
             {/* Links */}
             <div className="flex justify-end space-x-3">
               <Link
-                to="/forgot-password"
-                className="text-indigo-600 hover:underline text-sm"
-              >
-                Forgot Password?
-              </Link>
-              <Link
                 to="/login"
                 className="text-indigo-600 hover:underline text-sm"
               >

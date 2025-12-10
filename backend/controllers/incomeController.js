@@ -5,9 +5,9 @@ export const addIncome = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const { source, amount, date } = req.body;
+    const { source, description, amount, date } = req.body;
 
-    if (!source || !amount || !date) {
+    if (!source || !description || !amount || !date) {
       return res
         .status(400)
         .json({ message: "Please provide all required fields" });
@@ -16,6 +16,7 @@ export const addIncome = async (req, res) => {
     const newIncome = new Income({
       userId,
       source,
+      description,
       amount,
       date: new Date(date),
     });

@@ -8,6 +8,7 @@ const ExpenseSchema = new mongoose.Schema(
       required: true,
     },
     category: { type: String, required: true },
+    description: { type: String, maxlength: 500 },
     amount: { type: Number, required: true },
     date: { type: Date, default: Date.now },
   },

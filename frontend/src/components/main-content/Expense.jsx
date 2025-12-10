@@ -46,7 +46,7 @@ const Expense = () => {
 
   //   Handle Add Expense
   const handleAddExpense = async (expense) => {
-    const { category, amount, date } = expense;
+    const { category, description, amount, date } = expense;
 
     // Validation checks
     if (!category || !String(category).trim()) {
@@ -62,6 +62,7 @@ const Expense = () => {
     try {
       await axiosInstance.post(API_PATHS.EXPENSE.ADD_EXPENSE, {
         category,
+        description,
         amount,
         date,
       });

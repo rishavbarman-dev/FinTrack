@@ -40,7 +40,7 @@ export default function TransactionInfoCard({
       }`}
     >
       <div className="flex items-center space-x-4 min-w-0">
-        <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-700">
+        {/* <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-700">
           {icon ? (
             // if icon is a string path show img else assume it's a component
             typeof icon === "string" ? (
@@ -53,7 +53,7 @@ export default function TransactionInfoCard({
           ) : (
             <Utensils className="w-5 h-5 text-gray-500" />
           )}
-        </div>
+        </div> */}
 
         <div className="min-w-0">
           <div className="text-sm font-medium truncate">{title}</div>
