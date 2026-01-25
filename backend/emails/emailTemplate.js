@@ -12,7 +12,7 @@ import {
 } from "@react-email/components";
 
 export default function emailTemplate({
-  username = "",
+  username = "Rishav",
   type = "monthly-report",
   data = {},
 }) {

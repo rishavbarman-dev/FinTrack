@@ -21,13 +21,27 @@ export const checkBudgetAlert = inngest.createFunction(
           ? new mongoose.Types.ObjectId(budget.userId._id)
           : budget.userId._id;
 
+      // Current Month Start Date
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1);
+      startOfMonth.setHours(0, 0, 0, 0);
+
+      // Current Month Expense
       const totalExpense = await step.run("fetch-expenses", async () => {
         const result = await Expense.aggregate([
-          { $match: { userId } },
+          { $match: { userId, date: { $gte: startOfMonth } } },
           { $group: { _id: null, total: { $sum: "$amount" } } },
         ]);
         return result[0]?.total || 0;
       });
+
+      // const totalExpense = await step.run("fetch-expenses", async () => {
+      //   const result = await Expense.aggregate([
+      //     { $match: { userId } },
+      //     { $group: { _id: null, total: { $sum: "$amount" } } },
+      //   ]);
+      //   return result[0]?.total || 0;
+      // });
 
       const percentUsed = (totalExpense / budget.amount) * 100;
       console.log(

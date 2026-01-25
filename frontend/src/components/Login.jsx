@@ -23,48 +23,42 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    // Input validation before API call
-    if (!email.trim() || !password.trim()) {
-      toast.error("Please fill in all fields.");
-      return;
-    }
+    setLoading(true);
 
     try {
-      setLoading(true);
-      const loadingToast = toast.loading("Signing in...");
       const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
-        email,
+        username,
         password,
       });
 
-      const { token, user } = response.data;
+      const {
+        accessToken,
+        refreshToken,
+        userName,
+        userEmail,
+        role,
+      } = response.data;
 
-      if (token) {
-        localStorage.setItem("token", token);
-        updateUser(user);
+      // Store tokens correctly
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
 
-        toast.dismiss(loadingToast);
-        toast.success(`Welcome back, ${user?.name || "User"}! 🎉`);
-        navigate("/dashboard");
-      } else {
-        toast.dismiss(loadingToast);
-        toast.error("Login failed. Please try again.");
-      }
+      // Update user context
+      updateUser({
+        username: userName,
+        email: userEmail,
+        role,
+      });
+
+      onClose(); // close modal
+      // navigate("/dashboard"); // if using router
     } catch (error) {
-      toast.dismiss();
-
       if (error.response) {
-        if (error.response.status === 401)
-          toast.error("Invalid email or password.");
-        else if (error.response.status === 404)
-          toast.error("Account not found. Please sign up first.");
-        else
-          toast.error(error.response.data?.message || "Something went wrong.");
-      } else if (error.request) {
-        toast.error("Network error. Please check your connection.");
+        console.error(
+            error.response.data?.message || "Login failed"
+        );
       } else {
-        toast.error("Unexpected error occurred. Try again later.");
+        console.error("Network error");
       }
     } finally {
       setLoading(false);

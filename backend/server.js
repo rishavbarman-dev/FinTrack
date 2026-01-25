@@ -9,6 +9,7 @@ import expenseRoutes from "./routes/expenseRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import budgetRoutes from "./routes/budgetRoutes.js";
 import inngestRoutes from "./routes/inngestRoutes.js";
+import { sendBudgetAlertEmail } from "./lib/inngest/sendEmail.js";
 
 // Load environment variables
 dotenv.config();

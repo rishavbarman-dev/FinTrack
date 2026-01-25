@@ -74,6 +74,23 @@ export const getDahsboardData = async (req, res) => {
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .slice(0, 5); // latest first
 
+    // Current Month Start Date
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    // Current Month Income
+    const currentMonthIncome = await Income.aggregate([
+      { $match: { userId: userObjectId, date: { $gte: startOfMonth } } },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]);
+
+    // Current Month Expense
+    const currentMonthExpense = await Expense.aggregate([
+      { $match: { userId: userObjectId, date: { $gte: startOfMonth } } },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]);
+
     // Final response
     res.json({
       totalBalance:
@@ -89,6 +106,13 @@ export const getDahsboardData = async (req, res) => {
         transactions: last60DaysIncomeTrabsactions,
       },
       recentTransactions: last5Transactions,
+      currentMonthStats: {
+        income: currentMonthIncome[0]?.total || 0,
+        expense: currentMonthExpense[0]?.total || 0,
+        balance:
+          (currentMonthIncome[0]?.total || 0) -
+          (currentMonthExpense[0]?.total || 0),
+      },
     });
   } catch (error) {
     console.error("Error in getDahsboardData:", error);

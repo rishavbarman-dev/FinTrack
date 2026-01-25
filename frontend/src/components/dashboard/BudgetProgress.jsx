@@ -9,7 +9,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import toast from "react-hot-toast";
-import { Check, Pencil, X } from "lucide-react";
+import {
+  Check,
+  Pencil,
+  X,
+  TrendingUp,
+  AlertTriangle,
+  CheckCircle2,
+  Target,
+} from "lucide-react";
 import { Input } from "../ui/input";
 import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/utils/apiPaths";
@@ -62,14 +70,15 @@ export default function BudgetProgress({
 
   useEffect(() => {
     if (!initialBudget?.amount || initialBudget.amount <= 0) return;
-    // only run if expense or budget changed
-      if (
-        prevExpense.current === currentExpense &&
-        prevBudget.current === initialBudget.amount
-      ) return;
+    if (
+      prevExpense.current === currentExpense &&
+      prevBudget.current === initialBudget.amount
+    )
+      return;
 
-      prevExpense.current = currentExpense;
-      prevBudget.current = initialBudget.amount;
+    prevExpense.current = currentExpense;
+    prevBudget.current = initialBudget.amount;
+
     if (percentUsed >= 100) {
       toast.error(
         `Budget exceeded! You've spent more than ₹${initialBudget.amount.toLocaleString()}.`
@@ -86,31 +95,79 @@ export default function BudgetProgress({
     }
   }, [initialBudget, currentExpense, percentUsed]);
 
+  const currencyFormatter = new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  });
+
+  const remaining = initialBudget?.amount
+    ? initialBudget.amount - currentExpense
+    : 0;
+  const isOverBudget = percentUsed >= 100;
+  const isWarning = percentUsed >= 75 && percentUsed < 100;
+  const isGood = percentUsed < 75;
+
   return (
-    <Card
-      className={`mb-8 shadow-md border transition-colors ${
+    <div
+      className={`mb-8 rounded-2xl overflow-hidden shadow-xl transition-all duration-300 ${
         darkMode
-          ? "bg-gray-800 border-gray-700 text-gray-100"
-          : "bg-white border-gray-200 text-gray-900"
+          ? "bg-gradient-to-br from-gray-800 via-gray-800 to-gray-900"
+          : "bg-gradient-to-br from-white via-white to-gray-50"
       }`}
     >
-      <CardHeader>
-        <div className="flex justify-between items-center">
-          <CardTitle className="text-lg font-semibold">
-            Monthly Budget Progress
-          </CardTitle>
+      {/* Header Section */}
+      <div
+        className={`relative overflow-hidden ${
+          isOverBudget
+            ? "bg-gradient-to-r from-red-600 to-red-500"
+            : isWarning
+              ? "bg-gradient-to-r from-amber-600 to-orange-500"
+              : "bg-gradient-to-r from-blue-600 to-purple-600"
+        } px-6 py-5`}
+      >
+        <div className="absolute inset-0 opacity-10">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 20px 20px, white 1px, transparent 1px)",
+              backgroundSize: "40px 40px",
+            }}
+          />
+        </div>
+
+        <div className="relative flex justify-between items-start">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-white/20 backdrop-blur-sm rounded-xl">
+              <Target className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                Monthly Budget Tracker
+                {isGood && <CheckCircle2 className="w-5 h-5" />}
+                {isWarning && <AlertTriangle className="w-5 h-5" />}
+                {isOverBudget && (
+                  <AlertTriangle className="w-5 h-5 animate-pulse" />
+                )}
+              </h2>
+              <p className="text-white/80 text-sm mt-0.5">
+                {isOverBudget
+                  ? "Budget exceeded - review your spending"
+                  : isWarning
+                    ? "Approaching your budget limit"
+                    : "Track your spending progress"}
+              </p>
+            </div>
+          </div>
 
           {isEditing ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md rounded-xl p-2">
               <Input
                 type="number"
                 value={newBudget}
                 onChange={(e) => setNewBudget(e.target.value)}
-                className={`w-32 border ${
-                  darkMode
-                    ? "bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400"
-                    : "bg-gray-50 border-gray-300 text-gray-900"
-                }`}
+                className="w-36 h-9 bg-white/95 border-0 text-gray-900 font-semibold shadow-sm"
                 placeholder="Enter amount"
                 autoFocus
               />
@@ -118,75 +175,232 @@ export default function BudgetProgress({
                 variant="ghost"
                 size="icon"
                 onClick={handleUpdateBudget}
-                className={darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"}
+                className="h-9 w-9 bg-green-500/20 hover:bg-green-500/30 text-white transition-all"
               >
-                <Check className="h-4 w-4 text-green-500" />
+                <Check className="h-5 w-5" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={handleCancel}
-                className={darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"}
+                className="h-9 w-9 bg-red-500/20 hover:bg-red-500/30 text-white transition-all"
               >
-                <X className="h-4 w-4 text-red-500" />
+                <X className="h-5 w-5" />
               </Button>
             </div>
           ) : (
-            <div className="flex items-center gap-2">
-              <CardDescription
-                className={darkMode ? "text-gray-400" : "text-gray-600"}
-              >
-                {typeof initialBudget?.amount === "number"
-                  ? `${currentExpense?.toFixed?.(2) ?? "0.00"} of ₹${initialBudget.amount.toFixed(2)} spent`
-                  : "No budget set yet. Please set one to start tracking your expenses."}
-              </CardDescription>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsEditing(true)}
-                className={`h-6 w-6 ${
-                  darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
-                }`}
-              >
-                <Pencil
-                  className={`h-4 w-4 ${
-                    darkMode ? "text-gray-300" : "text-gray-600"
-                  }`}
-                />
-              </Button>
-            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsEditing(true)}
+              className="bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-sm transition-all"
+            >
+              <Pencil className="h-4 w-4 mr-2" />
+              Edit Budget
+            </Button>
           )}
         </div>
-      </CardHeader>
+      </div>
 
-      <CardContent>
-        {initialBudget ? (
-          <div className="space-y-2">
-            <Progress
-              value={percentUsed}
-              extraStyles={`${
-                percentUsed >= 90
-                  ? "bg-red-500"
-                  : percentUsed >= 75
-                    ? "bg-yellow-500"
-                    : "bg-green-500"
-              }`}
-              className={darkMode ? "bg-gray-700" : "bg-gray-200"}
-            />
-            <p
-              className={`text-xs text-right ${
-                darkMode ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
-              {percentUsed.toFixed(1)}% used
-            </p>
+      {/* Content Section */}
+      <div className="p-6">
+        {initialBudget?.amount ? (
+          <div className="space-y-6">
+            {/* Stats Grid */}
+            <div className="grid grid-cols-3 gap-4">
+              <div
+                className={`p-4 rounded-xl border transition-all ${
+                  darkMode
+                    ? "bg-gray-700/50 border-gray-600"
+                    : "bg-gray-50 border-gray-200"
+                }`}
+              >
+                <p
+                  className={`text-xs font-medium mb-1 ${
+                    darkMode ? "text-gray-400" : "text-gray-600"
+                  }`}
+                >
+                  Budget Set
+                </p>
+                <p
+                  className={`text-xl font-bold ${
+                    darkMode ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  {currencyFormatter.format(initialBudget.amount)}
+                </p>
+              </div>
+
+              <div
+                className={`p-4 rounded-xl border transition-all ${
+                  darkMode
+                    ? "bg-gray-700/50 border-gray-600"
+                    : "bg-gray-50 border-gray-200"
+                }`}
+              >
+                <p
+                  className={`text-xs font-medium mb-1 ${
+                    darkMode ? "text-gray-400" : "text-gray-600"
+                  }`}
+                >
+                  Spent
+                </p>
+                <p
+                  className={`text-xl font-bold ${
+                    isOverBudget
+                      ? "text-red-500"
+                      : isWarning
+                        ? "text-amber-500"
+                        : "text-green-500"
+                  }`}
+                >
+                  {currencyFormatter.format(currentExpense)}
+                </p>
+              </div>
+
+              <div
+                className={`p-4 rounded-xl border transition-all ${
+                  darkMode
+                    ? "bg-gray-700/50 border-gray-600"
+                    : "bg-gray-50 border-gray-200"
+                }`}
+              >
+                <p
+                  className={`text-xs font-medium mb-1 ${
+                    darkMode ? "text-gray-400" : "text-gray-600"
+                  }`}
+                >
+                  {isOverBudget ? "Over By" : "Remaining"}
+                </p>
+                <p
+                  className={`text-xl font-bold ${
+                    isOverBudget
+                      ? "text-red-500"
+                      : darkMode
+                        ? "text-blue-400"
+                        : "text-blue-600"
+                  }`}
+                >
+                  {currencyFormatter.format(Math.abs(remaining))}
+                </p>
+              </div>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span
+                  className={`text-sm font-medium ${
+                    darkMode ? "text-gray-300" : "text-gray-700"
+                  }`}
+                >
+                  Budget Usage
+                </span>
+                <span
+                  className={`text-sm font-bold px-3 py-1 rounded-full ${
+                    isOverBudget
+                      ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                      : isWarning
+                        ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                        : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                  }`}
+                >
+                  {percentUsed.toFixed(1)}%
+                </span>
+              </div>
+
+              <div className="relative">
+                <Progress
+                  value={Math.min(percentUsed, 100)}
+                  extraStyles={`transition-all duration-500 ${
+                    isOverBudget
+                      ? "bg-red-500"
+                      : isWarning
+                        ? "bg-amber-500"
+                        : "bg-gradient-to-r from-green-500 to-emerald-500"
+                  }`}
+                  className={`h-3 ${darkMode ? "bg-gray-700" : "bg-gray-200"}`}
+                />
+                {isOverBudget && (
+                  <div className="absolute top-0 left-0 w-full h-3 bg-red-500/20 animate-pulse rounded-full" />
+                )}
+              </div>
+
+              {/* Status Message */}
+              <div
+                className={`flex items-center gap-2 p-3 rounded-lg ${
+                  isOverBudget
+                    ? "bg-red-50 dark:bg-red-900/20"
+                    : isWarning
+                      ? "bg-amber-50 dark:bg-amber-900/20"
+                      : "bg-green-50 dark:bg-green-900/20"
+                }`}
+              >
+                {isGood && (
+                  <CheckCircle2 className="w-4 h-4 text-green-600 dark:text-green-400 flex-shrink-0" />
+                )}
+                {isWarning && (
+                  <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+                )}
+                {isOverBudget && (
+                  <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400 flex-shrink-0" />
+                )}
+
+                <p
+                  className={`text-xs font-medium ${
+                    isOverBudget
+                      ? "text-red-700 dark:text-red-300"
+                      : isWarning
+                        ? "text-amber-700 dark:text-amber-300"
+                        : "text-green-700 dark:text-green-300"
+                  }`}
+                >
+                  {isOverBudget
+                    ? `You've exceeded your budget by ${currencyFormatter.format(Math.abs(remaining))}. Consider reviewing your expenses.`
+                    : isWarning
+                      ? `You're using ${percentUsed.toFixed(0)}% of your budget. Be mindful of upcoming expenses.`
+                      : `Great! You have ${currencyFormatter.format(remaining)} left to spend this month.`}
+                </p>
+              </div>
+            </div>
           </div>
         ) : (
-          <p className={darkMode ? "text-gray-400" : "text-gray-500"}>
-            No budget set yet. Please set one to start tracking your expenses.
-          </p>
+          <div
+            className={`text-center py-8 px-4 rounded-xl border-2 border-dashed ${
+              darkMode
+                ? "border-gray-700 bg-gray-800/50"
+                : "border-gray-300 bg-gray-50"
+            }`}
+          >
+            <Target
+              className={`w-12 h-12 mx-auto mb-3 ${
+                darkMode ? "text-gray-600" : "text-gray-400"
+              }`}
+            />
+            <p
+              className={`text-lg font-semibold mb-2 ${
+                darkMode ? "text-gray-300" : "text-gray-700"
+              }`}
+            >
+              No Budget Set Yet
+            </p>
+            <p
+              className={`text-sm mb-4 ${
+                darkMode ? "text-gray-500" : "text-gray-600"
+              }`}
+            >
+              Set a monthly budget to start tracking your expenses effectively
+            </p>
+            <Button
+              onClick={() => setIsEditing(true)}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+            >
+              <Target className="w-4 h-4 mr-2" />
+              Set Your Budget
+            </Button>
+          </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

@@ -1,6 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { CreditCard, DollarSign, Percent, TrendingUp } from "lucide-react";
+import {
+  CreditCard,
+  DollarSign,
+  IndianRupee,
+  Percent,
+  TrendingUp,
+} from "lucide-react";
 import { useUserAuth } from "@/hooks/useUserAuth";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { API_PATHS } from "@/utils/apiPaths";
@@ -13,6 +19,7 @@ import Last30DaysExpenses from "./Last30DaysExpenses";
 import RecentIncomeWithChart from "./RecentIncomeWithChart";
 import RecentIncomes from "./RecentIncomes";
 import BudgetProgress from "./BudgetProgress";
+import CurrentMonthStats from "./CurrentMonthStats";
 
 export default function DashboardMain() {
   useUserAuth();
@@ -78,6 +85,9 @@ export default function DashboardMain() {
       ? Math.round(((totalIncome - totalExpense) / totalIncome) * 100)
       : 0;
 
+  const currentMonthIncomes = dashboardData?.currentMonthStats.income;
+  const currentMonthExpense = dashboardData?.currentMonthStats.expense;
+
   const currencyFormatter = new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
@@ -90,22 +100,29 @@ export default function DashboardMain() {
       <BudgetProgress
         darkMode={darkMode}
         initialBudget={{ amount: budgetData?.budget }}
-        currentExpense={dashboardData?.totalExpense}
+        currentExpense={currentMonthExpense}
         onBudgetUpdate={fetchBudgetData}
+      />
+
+      {/* Current Month Stats */}
+      <CurrentMonthStats
+        darkMode={darkMode}
+        currentMonthIncome={currentMonthIncomes}
+        currentMonthExpense={currentMonthExpense}
       />
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <InfoCard
           icon={TrendingUp}
-          label="Total Balance"
+          label="Overall Balance"
           value={`${currencyFormatter.format(totalBalance)}`}
           color="bg-purple-500"
           darkMode={darkMode}
         />
         <InfoCard
-          icon={DollarSign}
-          label="Monthly Income"
+          icon={IndianRupee}
+          label="Overall Income"
           value={currencyFormatter.format(totalIncome)}
           color="bg-cyan-500"
           darkMode={darkMode}
@@ -113,7 +130,7 @@ export default function DashboardMain() {
 
         <InfoCard
           icon={CreditCard}
-          label="Monthly Expenses"
+          label="Overall Expenses"
           value={currencyFormatter.format(Math.abs(totalExpense))}
           color="bg-red-500"
           darkMode={darkMode}
@@ -121,7 +138,7 @@ export default function DashboardMain() {
 
         <InfoCard
           icon={Percent}
-          label="Savings Rate"
+          label="Overall Savings Rate"
           value={`${savingsRate}%`}
           color="bg-green-500"
           darkMode={darkMode}
