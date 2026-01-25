@@ -3,7 +3,7 @@ import { Resend } from "resend";
 import { render } from "@react-email/render";
 import React from "react";
 import dotenv from "dotenv";
-import emailTemplate from "../../emails/EmailTemplate.js";
+import emailTemplate from "../../emails/emailTemplate.js";
 import { generateSpendingInsight } from "../ai/generateSpendingInsight.js";
 
 dotenv.config();
