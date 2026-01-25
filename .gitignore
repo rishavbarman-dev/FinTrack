@@ -10,6 +10,7 @@
 *.log.*
 *.sig
 
+frontend/dist/
 node_modules
 swark-output
 .env
