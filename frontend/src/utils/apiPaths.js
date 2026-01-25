@@ -1,4 +1,5 @@
 export const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
+console.log(import.meta.env.VITE_BASE_URL)
 
 export const API_PATHS = {
   AUTH: {
