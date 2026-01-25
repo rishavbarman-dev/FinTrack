@@ -23,42 +23,48 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
+
+    // Input validation before API call
+    if (!email.trim() || !password.trim()) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
 
     try {
+      setLoading(true);
+      const loadingToast = toast.loading("Signing in...");
       const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
-        username,
+        email,
         password,
       });
 
-      const {
-        accessToken,
-        refreshToken,
-        userName,
-        userEmail,
-        role,
-      } = response.data;
+      const { token, user } = response.data;
 
-      // Store tokens correctly
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
+      if (token) {
+        localStorage.setItem("token", token);
+        updateUser(user);
 
-      // Update user context
-      updateUser({
-        username: userName,
-        email: userEmail,
-        role,
-      });
-
-      onClose(); // close modal
-      // navigate("/dashboard"); // if using router
-    } catch (error) {
-      if (error.response) {
-        console.error(
-            error.response.data?.message || "Login failed"
-        );
+        toast.dismiss(loadingToast);
+        toast.success(`Welcome back, ${user?.name || "User"}! 🎉`);
+        navigate("/dashboard");
       } else {
-        console.error("Network error");
+        toast.dismiss(loadingToast);
+        toast.error("Login failed. Please try again.");
+      }
+    } catch (error) {
+      toast.dismiss();
+
+      if (error.response) {
+        if (error.response.status === 401)
+          toast.error("Invalid email or password.");
+        else if (error.response.status === 404)
+          toast.error("Account not found. Please sign up first.");
+        else
+          toast.error(error.response.data?.message || "Something went wrong.");
+      } else if (error.request) {
+        toast.error("Network error. Please check your connection.");
+      } else {
+        toast.error("Unexpected error occurred. Try again later.");
       }
     } finally {
       setLoading(false);
