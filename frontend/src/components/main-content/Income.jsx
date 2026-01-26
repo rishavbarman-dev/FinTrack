@@ -16,7 +16,7 @@ const Income = () => {
   const [openAddIncomeModel, setOpenAddIncomeModel] = useState(false);
   const { darkMode } = useOutletContext();
   const [incomeData, setIncomeData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [openDeleteAlert, setOpenDeleteAlert] = useState({
     show: false,
     data: null,
@@ -24,12 +24,11 @@ const Income = () => {
 
   //   Get all income details
   const fetchIncomeDetails = async () => {
-    if (loading) return;
     setLoading(true);
 
     try {
       const respone = await axiosInstance.get(
-        `${API_PATHS.INCOME.GET_ALL_INCOME}`
+        `${API_PATHS.INCOME.GET_ALL_INCOME}`,
       );
 
       if (respone.data) {
@@ -74,7 +73,7 @@ const Income = () => {
     } catch (error) {
       console.error(
         "Error adding income",
-        error.respone?.data?.message || error.message
+        error.respone?.data?.message || error.message,
       );
     }
   };
@@ -89,7 +88,7 @@ const Income = () => {
     } catch (error) {
       console.error(
         "Error deleting income",
-        error.respone?.data?.message || error.message
+        error.respone?.data?.message || error.message,
       );
     }
   };
@@ -101,7 +100,7 @@ const Income = () => {
         API_PATHS.INCOME.DOWNLOAD_INCOME,
         {
           responseType: "blob",
-        }
+        },
       );
 
       // Create a URL for the blob
@@ -128,24 +127,30 @@ const Income = () => {
   return (
     <div>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Income Overview  */}
-        <div className="grid grid-cols-1 gap-6">
-          <IncomeOverview
-            darkMode={darkMode}
-            transactions={incomeData}
-            onAddIncome={() => setOpenAddIncomeModel(true)}
-          />
+        {loading ? (
+          <div className="space-y-6 animate-pulse">
+            <div className="h-24 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+            <div className="h-40 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+            <div className="h-40 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6">
+            <IncomeOverview
+              darkMode={darkMode}
+              transactions={incomeData}
+              onAddIncome={() => setOpenAddIncomeModel(true)}
+            />
 
-          <IncomeList
-            darkMode={darkMode}
-            transactions={incomeData}
-            onDelete={(id) => {
-              setOpenDeleteAlert({ show: true, data: id });
-            }}
-            onDownload={handleDownloadIncomeDetails}
-          />
-        </div>
-
+            <IncomeList
+              darkMode={darkMode}
+              transactions={incomeData}
+              onDelete={(id) => {
+                setOpenDeleteAlert({ show: true, data: id });
+              }}
+              onDownload={handleDownloadIncomeDetails}
+            />
+          </div>
+        )}
         <Model
           darkMode={darkMode}
           isOpen={openAddIncomeModel}

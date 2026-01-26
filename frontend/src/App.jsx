@@ -1,48 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Login from "./components/Login";
-import Signup from "./components/Signup";
-import Dashboard from "./components/dashboard/Dashboard";
 import UserProvider from "./context/UserContext";
-import Income from "./components/main-content/Income";
-import Expense from "./components/main-content/Expense";
-import DashboardMain from "./components/dashboard/DashboardMain";
 import NotFound from "./pages/NotFound";
 import GlobalLoader from "./utils/GlobalLoader";
 import { Toaster } from "react-hot-toast";
+import { BASE_URL } from "./utils/apiPaths";
+
+const Login = React.lazy(() => import("./components/Login"));
+const Signup = React.lazy(() => import("./components/Signup"));
+const Dashboard = React.lazy(() => import("./components/dashboard/Dashboard"));
+const DashboardMain = React.lazy(
+  () => import("./components/dashboard/DashboardMain"),
+);
+const Income = React.lazy(() => import("./components/main-content/Income"));
+const Expense = React.lazy(() => import("./components/main-content/Expense"));
 
 const App = () => {
-  const [loading, setLoading] = useState(true);
-
+  // Backend pre-warm (hides Render cold start)
   useEffect(() => {
-    // Simulate initial loading
-    const timer = setTimeout(() => setLoading(false), 2500);
-    return () => clearTimeout(timer);
+    fetch(`${BASE_URL}/health`).catch(() => {});
   }, []);
-
-  if (loading) return <GlobalLoader />; // Corrected
 
   return (
     <UserProvider>
-      <Routes>
-        {/* Root redirect based on auth */}
-        <Route path="/" element={<Root />} />
+      <Suspense fallback={<GlobalLoader />}>
+        <Routes>
+          {/* Root redirect based on auth */}
+          <Route path="/" element={<Root />} />
 
-        {/* Auth routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+          {/* Auth routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
 
-        {/* Dashboard routes */}
-        <Route path="/dashboard" element={<Dashboard />}>
-          <Route index element={<DashboardMain />} />
-          <Route path="income" element={<Income />} />
-          <Route path="expense" element={<Expense />} />
+          {/* Dashboard routes */}
+          <Route path="/dashboard" element={<Dashboard />}>
+            <Route index element={<DashboardMain />} />
+            <Route path="income" element={<Income />} />
+            <Route path="expense" element={<Expense />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+
+          {/* Global 404 */}
           <Route path="*" element={<NotFound />} />
-        </Route>
-
-        {/* Global 404 */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+        </Routes>
+      </Suspense>
 
       <Toaster position="top-right" reverseOrder={false} />
     </UserProvider>

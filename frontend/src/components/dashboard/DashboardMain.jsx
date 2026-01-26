@@ -28,16 +28,15 @@ export default function DashboardMain() {
   const { darkMode } = useOutletContext();
   const [dashboardData, setDashboardData] = useState(null);
   const [budgetData, setBudgetData] = useState();
-  const [loading, setLoading] = useState(false);
+  const [dashboardLoading, setDashboardLoading] = useState(true);
+  const [budgetLoading, setBudgetLoading] = useState(true);
 
   const fetchDashboardData = async () => {
-    if (loading) return;
-
-    setLoading(true);
+    setDashboardLoading(true);
 
     try {
       const response = await axiosInstance.get(
-        `${API_PATHS.DASHBOARD.GET_DATA}`
+        `${API_PATHS.DASHBOARD.GET_DATA}`,
       );
       console.log("Dashboard data:", response.data);
 
@@ -47,14 +46,12 @@ export default function DashboardMain() {
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
     } finally {
-      setLoading(false);
+      setDashboardLoading(false);
     }
   };
 
   const fetchBudgetData = async () => {
-    if (loading) return;
-
-    setLoading(true);
+    setBudgetLoading(true);
 
     try {
       const response = await axiosInstance.get(`/api/v1/budget/check`);
@@ -66,7 +63,7 @@ export default function DashboardMain() {
     } catch (error) {
       console.error("Error fetching budget data:", error);
     } finally {
-      setLoading(false);
+      setBudgetLoading(false);
     }
   };
 
@@ -93,6 +90,28 @@ export default function DashboardMain() {
     currency: "INR",
     maximumFractionDigits: 2,
   });
+
+  if (dashboardLoading || budgetLoading) {
+    return (
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="space-y-6 animate-pulse">
+          <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <div
+                key={i}
+                className="h-28 bg-gray-200 dark:bg-gray-700 rounded-xl"
+              />
+            ))}
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+            <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

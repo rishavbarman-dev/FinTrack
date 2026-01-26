@@ -59,6 +59,11 @@ app.post("/api/v1/send-budget-alert", async (req, res) => {
   res.status(200).json({ message: "Email sent successfully", result });
 });
 
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

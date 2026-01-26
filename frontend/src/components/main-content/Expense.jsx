@@ -15,7 +15,7 @@ const Expense = () => {
   const [openAddExpenseModel, setOpenAddExpenseModel] = useState(false);
   const { darkMode } = useOutletContext();
   const [expenseData, setExpenseData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [openDeleteAlert, setOpenDeleteAlert] = useState({
     show: false,
     data: null,
@@ -23,12 +23,11 @@ const Expense = () => {
 
   //   Get all expense details
   const fetchExpenseDetails = async () => {
-    if (loading) return;
     setLoading(true);
 
     try {
       const respone = await axiosInstance.get(
-        `${API_PATHS.EXPENSE.GET_ALL_EXPENSE}`
+        `${API_PATHS.EXPENSE.GET_ALL_EXPENSE}`,
       );
 
       if (respone.data) {
@@ -73,7 +72,7 @@ const Expense = () => {
     } catch (error) {
       console.error(
         "Error adding expense",
-        error.respone?.data?.message || error.message
+        error.respone?.data?.message || error.message,
       );
     }
   };
@@ -88,7 +87,7 @@ const Expense = () => {
     } catch (error) {
       console.error(
         "Error deleting expense",
-        error.respone?.data?.message || error.message
+        error.respone?.data?.message || error.message,
       );
     }
   };
@@ -100,7 +99,7 @@ const Expense = () => {
         API_PATHS.EXPENSE.DOWNLOAD_EXPENSE,
         {
           responseType: "blob",
-        }
+        },
       );
 
       // Create a URL for the blob
@@ -126,23 +125,30 @@ const Expense = () => {
   return (
     <div>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Income Overview  */}
-        <div className="grid grid-cols-1 gap-6">
-          <ExpenseOverview
-            darkMode={darkMode}
-            transactions={expenseData}
-            onAddExpense={() => setOpenAddExpenseModel(true)}
-          />
+        {loading ? (
+          <div className="space-y-6 animate-pulse">
+            <div className="h-24 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+            <div className="h-40 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+            <div className="h-40 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6">
+            <ExpenseOverview
+              darkMode={darkMode}
+              transactions={expenseData}
+              onAddExpense={() => setOpenAddExpenseModel(true)}
+            />
 
-          <ExpenseList
-            darkMode={darkMode}
-            transactions={expenseData}
-            onDelete={(id) => {
-              setOpenDeleteAlert({ show: true, data: id });
-            }}
-            onDownload={handleDownloadExpenseDetails}
-          />
-        </div>
+            <ExpenseList
+              darkMode={darkMode}
+              transactions={expenseData}
+              onDelete={(id) => {
+                setOpenDeleteAlert({ show: true, data: id });
+              }}
+              onDownload={handleDownloadExpenseDetails}
+            />
+          </div>
+        )}
 
         <Model
           darkMode={darkMode}
