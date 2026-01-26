@@ -159,9 +159,6 @@ The frontend will typically run on:
 http://localhost:5173
 ```
 
-> 📸 **Screenshot Placeholder**
-> Add screenshots of the dashboard, login page, and transaction views here.
-
 ---
 
 ## Configuration
