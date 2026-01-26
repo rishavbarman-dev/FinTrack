@@ -8,7 +8,7 @@ const ActionButton = ({
   gradient = true,
 }) => {
   const baseStyles =
-    "flex items-center justify-center space-x-2 px-6 py-3 text-sm mt-4 text-white rounded-sm font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02]";
+    "flex items-center justify-center space-x-1.5 sm:space-x-2 px-4 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm mt-3 sm:mt-4 text-white rounded-sm font-semibold transition-all cursor-pointer duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] w-full sm:w-auto";
 
   const colorClasses = {
     purple: gradient
@@ -30,7 +30,7 @@ const ActionButton = ({
       onClick={onClick}
       className={`${baseStyles} ${colorClasses[color]}`}
     >
-      {Icon && <Icon className="w-4 h-4" />}
+      {Icon && <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
       <span>{label}</span>
     </button>
   );

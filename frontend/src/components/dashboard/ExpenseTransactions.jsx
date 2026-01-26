@@ -25,7 +25,7 @@ const ExpenseTransactions = ({
         <h5 className="text-lg font-semibold">Expenses</h5>
         <button
           onClick={() => onSeeMore && onSeeMore()}
-          className={`text-sm font-medium hover:underline ${
+          className={`text-sm font-medium hover:text-indigo-700 cursor-pointer ${
             darkMode
               ? "text-indigo-400 hover:text-indigo-300"
               : "text-indigo-600"

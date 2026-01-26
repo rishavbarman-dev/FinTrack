@@ -5,10 +5,10 @@ export default function InfoCard({
   icon: Icon,
   label,
   value,
-  color = "bg-purple-500", // default color
+  color = "bg-purple-500",
   darkMode,
 }) {
-  // Convert bg-purple-500 → text-purple-500
+  
   const textColor = color.startsWith("bg-")
     ? color.replace("bg-", "text-")
     : `text-${color}-500`;
@@ -43,7 +43,7 @@ export default function InfoCard({
 
       {/* Value */}
       <CardContent>
-        <div className={`text-3xl font-bold text-cyan-500 ${textColor}`}>
+        <div className={`text-xl sm:text-2xl font-bold text-cyan-500 ${textColor}`}>
           {value}
         </div>
       </CardContent>

@@ -2,7 +2,7 @@ import React from "react";
 
 const TransactionButton = ({ label, onClick, color = "purple" }) => {
   const baseStyles =
-    "flex-1 px-4 py-2 rounded-md font-medium text-white transition-colors duration-200";
+    "flex-1 px-4 py-2 rounded-md font-medium text-white transition-colors duration-200  cursor-pointer";
 
   const colorClasses = {
     purple: "bg-purple-600 hover:bg-purple-700",

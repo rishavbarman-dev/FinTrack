@@ -32,7 +32,7 @@ const ExpenseOverview = ({ transactions, onAddExpense }) => {
         className={`flex items-start justify-between mb-8 pb-6 border-b ${headerBorder}`}
       >
         <div className="space-y-2">
-          <h1 className={`text-4xl font-bold ${gradientText}`}>
+          <h1 className={`text-base sm:text-xl font-bold ${gradientText}`}>
             Expense Overview
           </h1>
           <p className={`${textMuted} text-sm`}>

@@ -6,7 +6,6 @@ import {
   Sun,
   User,
   TrendingDown,
-  Receipt,
 } from "lucide-react";
 import logo from "../../assets/images/logo.png";
 import { UserContext } from "@/context/UserContext";
@@ -25,13 +24,7 @@ const menuItems = [
     label: "Expense",
     icon: TrendingDown,
     path: "/dashboard/expense",
-  },
-  // {
-  //   id: "reports",
-  //   label: "Reports",
-  //   icon: Receipt,
-  //   path: "/dashboard/reports",
-  // },
+  }
 ];
 
 const Dashboard = () => {
@@ -87,7 +80,7 @@ const Dashboard = () => {
                   FinTrack
                 </h1>
                 <p
-                  className={`text-sm ${
+                  className={`text-xs sm:text-sm font-medium ${
                     darkMode ? "text-gray-400" : "text-gray-500"
                   }`}
                 >
@@ -99,7 +92,7 @@ const Dashboard = () => {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setDarkMode(!darkMode)}
-                className={`p-2 rounded-lg ${
+                className={`p-2 rounded-lg cursor-pointer ${
                   darkMode
                     ? "bg-gray-700 text-yellow-400"
                     : "bg-gray-100 text-gray-600"
@@ -116,10 +109,10 @@ const Dashboard = () => {
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setShowUserMenu((s) => !s)}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center focus:outline-none ring-1 ${
+                  className={`w-10 h-10 rounded-full flex items-center justify-center focus:outline-none ring-1 cursor-pointer ${
                     darkMode
-                      ? "ring-gray-700 bg-gradient-to-br from-blue-600 to-blue-400"
-                      : "ring-white bg-gradient-to-br from-blue-400 to-blue-600"
+                      ? "ring-gray-700 bg-linear-to-br from-blue-600 to-blue-400"
+                      : "ring-white bg-linear-to-br from-blue-400 to-blue-600"
                   }`}
                   aria-haspopup="true"
                   aria-expanded={showUserMenu}
@@ -159,7 +152,9 @@ const Dashboard = () => {
                     >
                       <button
                         onClick={handleLogout}
-                        className="w-full text-left px-3 py-2 rounded-md hover:bg-red-50 hover:text-red-600 transition-colors"
+                        className={`w-full text-left px-3 py-2 rounded-md cursor-pointer ${
+                          darkMode ? "text-white hover:bg-red-500" : "hover:bg-red-50 hover:text-red-600 transition-colors"
+                        } `}
                       >
                         Logout
                       </button>
@@ -191,7 +186,7 @@ const Dashboard = () => {
                   }}
                   className={`flex items-center space-x-2 px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
                     activeItem === item.id
-                      ? "bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-lg"
+                      ? "bg-linear-to-r from-purple-500 to-indigo-600 text-white shadow-lg"
                       : darkMode
                         ? "text-gray-300 hover:bg-gray-700"
                         : "text-gray-600 hover:bg-gray-100"

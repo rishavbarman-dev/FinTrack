@@ -32,11 +32,13 @@ const IncomeList = ({ transactions, onDelete, onDownload }) => {
     }
   `;
 
-  const titleColor = darkMode ? "text-white" : "text-gray-900";
+  const gradientText = darkMode
+    ? "bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent"
+    : "bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent";
   const subTextColor = darkMode ? "text-gray-400" : "text-gray-600";
 
   const buttonClasses = `
-    flex items-center space-x-2 px-5 py-2.5 rounded-lg transition-all duration-200 shadow-sm border font-medium
+    flex items-center space-x-2 px-5 py-2.5 rounded-lg transition-all duration-200 shadow-sm border font-medium cursor-pointer
     ${
       darkMode
         ? "bg-gray-700 text-purple-400 hover:bg-gray-600 border-gray-600"
@@ -54,7 +56,7 @@ const IncomeList = ({ transactions, onDelete, onDownload }) => {
       <div className={headerClasses}>
         <div className="flex items-center justify-between">
           <div>
-            <h5 className={`text-2xl font-bold ${titleColor}`}>
+            <h5 className={`text-base sm:text-xl font-bold ${gradientText}`}>
               Income Sources
             </h5>
             <p className={`text-sm mt-1 ${subTextColor}`}>

@@ -24,7 +24,7 @@ const RecentTransaction = ({
         <h5 className="text-lg font-semibold">Recent Transactions</h5>
         <button
           onClick={() => onSeeMore && onSeeMore()}
-          className="text-sm text-indigo-600 hover:underline"
+          className="text-sm text-indigo-600 hover:text-indigo-700 cursor-pointer"
         >
           See All
         </button>

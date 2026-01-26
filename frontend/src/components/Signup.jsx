@@ -6,6 +6,7 @@ import eyeIcon from "../assets/images/password_show.png";
 import eyeOffIcon from "../assets/images/password_hide.png";
 import loginIcon from "../assets/images/login_icon_white.png";
 import waveBackground from "../assets/images/background_left_login.png";
+import appLogo from "../assets/images/logo.png";
 import { Mail } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "@/context/UserContext";
@@ -108,155 +109,287 @@ const Signup = () => {
   return (
     <>
       {loading && <GlobalLoader />}
-      <div className="flex w-screen h-screen bg-white overflow-hidden relative flex-col lg:flex-row">
-        {/* Form Section */}
-        <div
-          className="flex flex-col justify-center items-center flex-1 h-full p-8 md:p-12 lg:p-16 bg-white bg-no-repeat bg-contain"
-          style={{
-            backgroundImage: `url(${waveBackground})`,
-          }}
-        >
-          <form
-            onSubmit={handleSignup}
-            className="w-full max-w-md space-y-6 bg-transparent"
-          >
-            <h1 className="text-[2.9rem] font-bold text-left mb-2 bg-gradient-to-r from-gray-300 via-purple-500 to-indigo-600 bg-clip-text text-transparent">
-              Signup
+      {/* Mobile */}
+      <div className="lg:hidden">
+        <div className="min-h-screen bg-linear-to-br from-white via-purple-50 to-indigo-100 px-4 py-8 flex flex-col justify-center">
+          {/* Logo and Title */}
+          <div className="text-center mb-8">
+            <img src={appLogo} className="mx-auto w-16 h-16 mb-4" alt="App Logo" />
+            <h1 className="text-2xl font-bold bg-linear-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+              FinTrack
             </h1>
+            <p className="text-sm text-gray-600 mt-1">Personal Finance Tracker</p>
+          </div>
 
-            {/* First Name */}
-            <div className="mb-5 relative">
-              <label
-                htmlFor="firstName"
-                className="block mb-2 text-gray-800 font-medium capitalize"
-              >
-                First Name
-              </label>
-              <img
-                src={usernameIcon}
-                alt="First Name"
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 mt-4"
-              />
-              <input
-                type="text"
-                id="firstName"
-                placeholder="First Name"
-                className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-md text-base focus:outline-none"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                required
-              />
-            </div>
-
-            {/* Last Name */}
-            <div className="mb-5 relative">
-              <label
-                htmlFor="lastName"
-                className="block mb-2 text-gray-800 font-medium capitalize"
-              >
-                Last Name
-              </label>
-              <img
-                src={usernameIcon}
-                alt="Last Name"
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 mt-4"
-              />
-              <input
-                type="text"
-                id="lastName"
-                placeholder="Last Name"
-                className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-md text-base focus:outline-none"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                required
-              />
-            </div>
-
-            {/* Email */}
-            <div className="mb-5 relative">
-              <label
-                htmlFor="email"
-                className="block mb-2 text-gray-800 font-medium capitalize"
-              >
-                Email
-              </label>
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 mt-4">
-                <Mail className="w-5 h-5" />
-              </span>
-              <input
-                type="email"
-                id="email"
-                placeholder="Email Address"
-                className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-md text-base focus:outline-none"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-
-            {/* Password */}
-            <div className="mb-5 relative">
-              <label
-                htmlFor="password"
-                className="block mb-2 text-gray-800 font-medium capitalize"
-              >
-                Password
-              </label>
-              <img
-                src={passwordIcon}
-                alt="Password"
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 mt-4"
-              />
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                placeholder="*********"
-                className="w-full pl-10 pr-10 py-3 border-2 border-gray-300 rounded-md text-base focus:outline-none"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
-              >
-                <img
-                  src={showPassword ? eyeOffIcon : eyeIcon}
-                  alt={showPassword ? "Hide password" : "Show password"}
-                  className="w-5 h-5 mt-8"
-                />
-              </button>
-            </div>
-
-            {/* Links */}
-            <div className="flex justify-end space-x-3">
-              <Link
-                to="/login"
-                className="text-indigo-600 hover:underline text-sm"
-              >
-                Already have an account?
-              </Link>
-            </div>
-
-            {/* Submit */}
-            <button
-              type="submit"
-              className="flex items-center justify-center w-40 py-3 rounded-md text-lg font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-500 hover:from-purple-500 hover:to-indigo-600 transition"
+          {/* Signup Card */}
+          <div className="flex justify-center">
+            <form
+              onSubmit={handleSignup}
+              className="w-full max-w-sm bg-white rounded-2xl shadow-xl p-8 space-y-5"
             >
-              <img src={loginIcon} alt="Signup" className="w-5 h-5 mr-2" />
-              <span>Signup</span>
-            </button>
-          </form>
-        </div>
+              <h2 className="text-3xl font-bold text-left bg-linear-to-r from-gray-800 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                Signup
+              </h2>
 
-        {/* Image Section */}
-        <div className="flex flex-1 justify-center items-center h-1/3 lg:h-full p-6 md:p-10 lg:p-12 bg-gradient-to-r from-white via-purple-400 to-indigo-600">
-          <img
-            src={loginCardImage}
-            alt="Signup Card"
-            className="max-w-[70%] max-h-[70%] rounded-lg object-cover"
-          />
+              {/* First Name */}
+              <div className="relative">
+                <label className="block mb-2 text-gray-800 font-medium">
+                  First Name
+                </label>
+                <img
+                  src={usernameIcon}
+                  className="absolute left-3 top-11 w-5 h-5"
+                  alt="First Name"
+                />
+                <input
+                  type="text"
+                  placeholder="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="w-full h-12 pl-10 pr-4 border-2 border-gray-300 rounded-md text-base focus:outline-none focus:border-indigo-500"
+                  required
+                />
+              </div>
+
+              {/* Last Name */}
+              <div className="relative">
+                <label className="block mb-2 text-gray-800 font-medium">
+                  Last Name
+                </label>
+                <img
+                  src={usernameIcon}
+                  className="absolute left-3 top-11 w-5 h-5"
+                  alt="Last Name"
+                />
+                <input
+                  type="text"
+                  placeholder="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="w-full h-12 pl-10 pr-4 border-2 border-gray-300 rounded-md text-base focus:outline-none focus:border-indigo-500"
+                  required
+                />
+              </div>
+
+              {/* Email */}
+              <div className="relative">
+                <label className="block mb-2 text-gray-800 font-medium">
+                  Email
+                </label>
+                <span className="absolute left-3 top-11">
+                  <Mail className="w-5 h-5 text-gray-500" />
+                </span>
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full h-12 pl-10 pr-4 border-2 border-gray-300 rounded-md text-base focus:outline-none focus:border-indigo-500"
+                  required
+                />
+              </div>
+
+              {/* Password */}
+              <div className="relative">
+                <label className="block mb-2 text-gray-800 font-medium">
+                  Password
+                </label>
+                <img
+                  src={passwordIcon}
+                  className="absolute left-3 top-11 w-5 h-5"
+                  alt="Password"
+                />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="*********"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full h-12 pl-10 pr-10 border-2 border-gray-300 rounded-md text-base focus:outline-none focus:border-indigo-500"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-11"
+                >
+                  <img
+                    src={showPassword ? eyeOffIcon : eyeIcon}
+                    className="w-5 h-5"
+                    alt={showPassword ? "Hide password" : "Show password"}
+                  />
+                </button>
+              </div>
+
+              <div className="flex justify-end">
+                <Link to="/login" className="text-sm text-indigo-600 hover:underline">
+                  Already have an account?
+                </Link>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full h-12 flex items-center justify-center rounded-md text-lg font-medium text-white bg-linear-to-r from-indigo-600 to-purple-500 hover:from-purple-500 hover:to-indigo-600 transition-all duration-300 shadow-lg"
+              >
+                <img src={loginIcon} className="w-5 h-5 mr-2" alt="Signup" />
+                Signup
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop */}
+      <div className="hidden lg:block">
+        <div className="flex w-screen h-screen bg-white overflow-hidden relative flex-col lg:flex-row">
+          {/* Form Section */}
+          <div
+            className="flex flex-col justify-center items-center flex-1 h-full p-8 md:p-12 lg:p-16 bg-white bg-no-repeat bg-contain"
+            style={{
+              backgroundImage: `url(${waveBackground})`,
+            }}
+          >
+            <form
+              onSubmit={handleSignup}
+              className="w-full max-w-md space-y-6 bg-transparent"
+            >
+              <h1 className="text-[2.9rem] font-bold text-left mb-2 bg-linear-to-r from-gray-300 via-purple-500 to-indigo-600 bg-clip-text text-transparent">
+                Signup
+              </h1>
+
+              {/* First Name */}
+              <div className="mb-5 relative">
+                <label
+                  htmlFor="firstName"
+                  className="block mb-2 text-gray-800 font-medium capitalize"
+                >
+                  First Name
+                </label>
+                <img
+                  src={usernameIcon}
+                  alt="First Name"
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 mt-4"
+                />
+                <input
+                  type="text"
+                  id="firstName"
+                  placeholder="First Name"
+                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-md text-base focus:outline-none"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+              </div>
+
+              {/* Last Name */}
+              <div className="mb-5 relative">
+                <label
+                  htmlFor="lastName"
+                  className="block mb-2 text-gray-800 font-medium capitalize"
+                >
+                  Last Name
+                </label>
+                <img
+                  src={usernameIcon}
+                  alt="Last Name"
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 mt-4"
+                />
+                <input
+                  type="text"
+                  id="lastName"
+                  placeholder="Last Name"
+                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-md text-base focus:outline-none"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
+              </div>
+
+              {/* Email */}
+              <div className="mb-5 relative">
+                <label
+                  htmlFor="email"
+                  className="block mb-2 text-gray-800 font-medium capitalize"
+                >
+                  Email
+                </label>
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 mt-4">
+                  <Mail className="w-5 h-5" />
+                </span>
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="Email Address"
+                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-md text-base focus:outline-none"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+
+              {/* Password */}
+              <div className="mb-5 relative">
+                <label
+                  htmlFor="password"
+                  className="block mb-2 text-gray-800 font-medium capitalize"
+                >
+                  Password
+                </label>
+                <img
+                  src={passwordIcon}
+                  alt="Password"
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 mt-4"
+                />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  placeholder="*********"
+                  className="w-full pl-10 pr-10 py-3 border-2 border-gray-300 rounded-md text-base focus:outline-none"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                >
+                  <img
+                    src={showPassword ? eyeOffIcon : eyeIcon}
+                    alt={showPassword ? "Hide password" : "Show password"}
+                    className="w-5 h-5 mt-8"
+                  />
+                </button>
+              </div>
+
+              {/* Links */}
+              <div className="flex justify-end space-x-3">
+                <Link
+                  to="/login"
+                  className="text-indigo-600 hover:underline text-sm"
+                >
+                  Already have an account?
+                </Link>
+              </div>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                className="flex items-center justify-center w-40 py-3 rounded-md text-lg font-medium text-white bg-linear-to-r from-indigo-600 to-purple-500 hover:from-purple-500 hover:to-indigo-600 transition"
+              >
+                <img src={loginIcon} alt="Signup" className="w-5 h-5 mr-2" />
+                <span>Signup</span>
+              </button>
+            </form>
+          </div>
+
+          {/* Image Section */}
+          <div className="flex flex-1 justify-center items-center h-1/3 lg:h-full p-6 md:p-10 lg:p-12 bg-linear-to-r from-white via-purple-400 to-indigo-600">
+            <img
+              src={loginCardImage}
+              alt="Signup Card"
+              className="max-w-[70%] max-h-[70%] rounded-lg object-cover"
+            />
+          </div>
         </div>
       </div>
     </>
