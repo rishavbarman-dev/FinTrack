@@ -50,7 +50,7 @@ const Dashboard = () => {
     localStorage.removeItem("token");
     clearUser && clearUser();
     setShowUserMenu(false);
-    navigate("/login");
+    navigate("/");
   };
 
   return (

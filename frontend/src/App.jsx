@@ -14,6 +14,7 @@ const DashboardMain = React.lazy(
 );
 const Income = React.lazy(() => import("./components/main-content/Income"));
 const Expense = React.lazy(() => import("./components/main-content/Expense"));
+const Landing = React.lazy(() => import("./pages/LandingNew"));
 
 const App = () => {
   // Backend pre-warm (hides Render cold start)
@@ -52,13 +53,13 @@ const App = () => {
 
 export default App;
 
-// Root redirect component
+// Root component - landing for guests, dashboard for authenticated users
 const Root = () => {
   const isAuthenticated = !!localStorage.getItem("token");
 
-  return isAuthenticated ? (
-    <Navigate to="/dashboard" />
-  ) : (
-    <Navigate to="/login" />
-  );
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" />;
+  }
+
+  return <Landing />;
 };
