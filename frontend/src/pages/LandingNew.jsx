@@ -525,9 +525,9 @@ const LandingEnhanced = () => {
           <div className="pt-6 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
             <p>© {new Date().getFullYear()} FinTrack. All rights reserved.</p>
             <div className="flex items-center gap-4">
-              <a href="#" className="hover:text-indigo-600 transition-colors">Twitter</a>
-              <a href="#" className="hover:text-indigo-600 transition-colors">LinkedIn</a>
-              <a href="#" className="hover:text-indigo-600 transition-colors">Github</a>
+              <Link to="#" className="hover:text-indigo-600 transition-colors">Twitter</Link>
+              <Link to="https://www.linkedin.com/in/rishavbarman-dev/" target="_blank" className="hover:text-indigo-600 transition-colors">LinkedIn</Link>
+              <Link to="https://github.com/rishavbarman-dev" target="_blank" className="hover:text-indigo-600 transition-colors">Github</Link>
             </div>
           </div>
         </div>
